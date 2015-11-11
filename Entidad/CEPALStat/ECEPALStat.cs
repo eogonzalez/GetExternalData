@@ -6,27 +6,16 @@ using System.Threading.Tasks;
 
 namespace Entidad.CEPALStat
 {
-    public class indicador{
-        public string name {get; set;}
-        public int idIndicator {get;set;}
-    }
-
-    public class area{
-        
-        public string name {get; set;}
-        public int id_area {get; set;}
-
-        public IEnumerable<indicador> indicadores {get;set;}
-
-        //public IEnumerable<area> areas {get;set;}
-           
-    }
 
     public class tema
     {
+        public int item_Id { get; set; }
         public string name { get; set; }
+        public int idIndicator { get; set; }
+        public int id_area { get; set; }
+        public int item_Id_0 { get; set; }
         public int id_tema { get; set; }
-        public IEnumerable<area> areas { get; set; }
+        
     }
 
 }

@@ -14,7 +14,6 @@ namespace Datos.CEPALStat
     public class CEPALStat
     {
         
-
         //Verifica si el archivo ya esta existe
         public bool ExisteArchivo(string filename)
         {
@@ -67,72 +66,13 @@ namespace Datos.CEPALStat
         }
 
         //Lee archivo y llena listado
-        public List<Entidad.CEPALStat.tema> ReadArchivo(string filename)
+        public DataSet ReadArchivo(string filename)
         {
-            List<Entidad.CEPALStat.tema> temas_list = new List<Entidad.CEPALStat.tema>();
+            
+            var ds = new DataSet();
             try
             {
-                XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.Load(filename);
-
-                
-                //var ds = new DataSet();
-                //ds.ReadXml(filename, XmlReadMode.InferSchema);
-
-                XmlNodeList xItem = xmlDoc.GetElementsByTagName("item");
-
-                
-                Entidad.CEPALStat.tema tema_item = new Entidad.CEPALStat.tema();
-
-                tema_item.name = ((XmlElement)xItem[0]).GetAttribute("name");
-                tema_item.id_tema = Convert.ToInt16(((XmlElement)xItem[0]).GetAttribute("id_tema"));
-
-                List<Entidad.CEPALStat.area> areas_list = new List<Entidad.CEPALStat.area>();
-
-                XmlNodeList xListItems = ((XmlElement)xItem[0]).GetElementsByTagName("item");
-
-                string name_area = null;
-                int id_area = 0;
-
-                foreach (XmlElement nodo in xListItems)
-                {
-
-
-                    if ((Convert.ToInt16(nodo.GetAttribute("id_area").Count()) > 0))
-                    {
-                        Entidad.CEPALStat.area area_item = new Entidad.CEPALStat.area();
-
-                        area_item.name = nodo.GetAttribute("name");
-                        area_item.id_area = Convert.ToInt16(nodo.GetAttribute("id_area"));
-
-                        name_area = area_item.name;
-                        id_area = area_item.id_area;
-
-                        areas_list.Add(area_item);
-                    }
-                    else if ((Convert.ToInt16(nodo.GetAttribute("idIndicator").Count()) > 0))
-                    {
-                        List<Entidad.CEPALStat.indicador> indicador_list = new List<Entidad.CEPALStat.indicador>();
-                        Entidad.CEPALStat.indicador indicador_item = new Entidad.CEPALStat.indicador();
-
-                        indicador_item.name = nodo.GetAttribute("name");
-                        indicador_item.idIndicator = Convert.ToInt16(nodo.GetAttribute("idIndicator"));
-                        indicador_list.Add(indicador_item);
-
-                        Entidad.CEPALStat.area area_item = new Entidad.CEPALStat.area();
-
-                        area_item.name = name_area;
-                        area_item.id_area = id_area;
-                        area_item.indicadores = indicador_list;
-                        areas_list.Add(area_item);
-
-                    }
-                    //area_item.indicadores = indicador_list;
-                }
-
-                tema_item.areas = areas_list;
-
-                temas_list.Add(tema_item);
+                ds.ReadXml(filename, XmlReadMode.InferSchema);   
             }
             catch(XmlException)
             {
@@ -143,11 +83,11 @@ namespace Datos.CEPALStat
                 
                 throw;
             }
-            return temas_list;
+            return ds;
         }
 
-        //Funcion que almacena la informacion en la base datos
-        public bool SaveData(List<Entidad.CEPALStat.tema> temas_list)
+        //Funcion que almacena la informacion de los temas en la base datos
+        public bool SaveDataTheme(DataSet temas_list)
         {
             var objConectar = new General.ConectarService();
  
@@ -155,83 +95,44 @@ namespace Datos.CEPALStat
             string sql_query = null;
             try
             {
-                foreach (Entidad.CEPALStat.tema item_temas in temas_list){
+                DataTable dt_temas = temas_list.Tables["item"];
+
+                foreach (DataRow temas_row in dt_temas.Rows){
                     //Query para insertar en la tabla de temas
-                    sql_query = " INSERT INTO Thematic_A_Tema " +
-                        " ([name] "+
-                        " ,[id_tema]) "+
+                    sql_query = " INSERT INTO A_Thematic " +
+                        " (item_Id, name, idIndicator, id_area, "+
+                        " item_Id_0, id_tema) " +
                         " VALUES "+
-                        " (@name "+
-                        " ,@id_tema) ";
+                        " (@item_Id, @name, @idIndicator, @id_area, "+
+                        " @item_Id_0, @id_tema) ";
 
                     using ( var conexion = objConectar.Conectar())
                     {
                         var command = new SqlCommand(sql_query, conexion);
-                        command.Parameters.AddWithValue("name", item_temas.name);
-                        command.Parameters.AddWithValue("id_tema", item_temas.id_tema);
+                        command.Parameters.AddWithValue("item_Id", temas_row["item_Id"]);
+                        command.Parameters.AddWithValue("name", temas_row["name"]);
+                        command.Parameters.AddWithValue("idIndicator", temas_row["idIndicator"]);    
+                        command.Parameters.AddWithValue("id_area", temas_row["id_area"]);    
+                        command.Parameters.AddWithValue("item_Id_0", temas_row["item_Id_0"]);    
+                        command.Parameters.AddWithValue("id_tema", temas_row["id_tema"]);    
                         conexion.Open();
                        
                        if ( command.ExecuteNonQuery()  > 0)
                        {    
                            //Si se inserta tema
                            estado = true;
-                           if (item_temas.areas != null)
-                           {
-                               foreach (var item_area in item_temas.areas)
-                               {//Recorro las areas del tema
-                                   sql_query = " INSERT INTO Thematic_B_Area " +
-                                       " (id_tema " +
-                                       " , name " +
-                                       " , id_area) " +
-                                       " VALUES " +
-                                       " (@id_tema, @name, @id_area) ";
-                                   using (var con = objConectar.Conectar())
-                                   {
-                                       var cm = new SqlCommand(sql_query, con);
-                                       cm.Parameters.AddWithValue("id_tema", item_temas.id_tema);
-                                       cm.Parameters.AddWithValue("name", item_area.name);
-                                       cm.Parameters.AddWithValue("id_area", item_area.id_area);
-                                       con.Open();
-                                       cm.ExecuteNonQuery();
-
-                                   }
-
-                                   if (item_area.indicadores != null)
-                                   {//Recorro los indicadores de cada tema
-                                       
-                                        foreach (var item_indicador in item_area.indicadores)
-	                                    {
-                                            sql_query = " INSERT INTO Thematic_C_Indicator "+
-                                                " ([id_tema] ,[id_area] "+
-                                                " ,[name] ,[idIndicator]) "+
-                                                " VALUES "+
-                                                " (@id_tema, @id_area "+
-                                                " ,@name, @idIndicator) ";
-
-                                            using (var con2 = objConectar.Conectar())
-                                            {
-                                                var cm2 = new SqlCommand(sql_query, con2);
-                                                cm2.Parameters.AddWithValue("id_tema", item_temas.id_tema);
-                                                cm2.Parameters.AddWithValue("id_area", item_area.id_area);
-                                                cm2.Parameters.AddWithValue("name", item_indicador.name);
-                                                cm2.Parameters.AddWithValue("idIndicator", item_indicador.idIndicator);
-                                                con2.Open();
-                                                cm2.ExecuteNonQuery();
-                                            }
-                                    	}
-                                   }
-                           }
-                           }
                        }
                        else
                        {
                            estado = false;
                        }
-
-
                     }
-
                 }
+            }
+            catch (SqlException)
+            {
+                estado = false;
+
             }
             catch (Exception)
             {
@@ -241,95 +142,308 @@ namespace Datos.CEPALStat
             return estado;
         }
 
-        //public bool GetThematicTree()
-        //{
-        //    bool estado = true;
-        //    string Url = @"http://interwp.cepal.org/sisgen/ws/cepalstat/getThematicTree.asp?language=spanish&password=87654321";
-        //    string filename = "C:/getThematicTree_"+Convert.ToString(DateTime.Today.Year)+"_"+Convert.ToString(DateTime.Today.Month)+"_"+Convert.ToString(DateTime.Today.Day)+".xml";
+        //Funcion que almacena la informacion de las dimensiones en la base datos
+        public bool SaveDataDimensions(DataSet list_dim)
+        {
+            var objConectar = new General.ConectarService();
 
-        //    try
-        //    {
-        //        XmlDocument xmlDoc = new XmlDocument();
+            bool estado = true;
+            string sql_query = null;
+            try
+            {
+                DataTable dt_dimensions = list_dim.Tables["dimensions"];
+                DataTable dt_dim = list_dim.Tables["dim"];
+                DataTable dt_des = list_dim.Tables["des"];
 
-        //        //Consulto Catalogo
-        //        xmlDoc.Load(Url);
-
-        //        //Almaceno Archivo
-        //        xmlDoc.Save(filename);
-
-        //        //Leo Archivo Fisico
-        //        xmlDoc.Load(filename);
-
-        //        XmlNodeList xItem = xmlDoc.GetElementsByTagName("item");
-                
-        //        List<Entidad.CEPALStat.tema> temas_list = new List<Entidad.CEPALStat.tema>();
-        //        Entidad.CEPALStat.tema tema_item = new Entidad.CEPALStat.tema();
-
-        //        tema_item.name = ((XmlElement)xItem[0]).GetAttribute("name");
-        //        tema_item.id_tema = Convert.ToInt16(((XmlElement)xItem[0]).GetAttribute("id_tema"));
-                
-        //        List<Entidad.CEPALStat.area> areas_list = new List<Entidad.CEPALStat.area>();
-
-        //        XmlNodeList xListItems = ((XmlElement)xItem[0]).GetElementsByTagName("item");
-
-        //        string name_area = null;
-        //        int id_area = 0;
-
-        //        foreach (XmlElement nodo in xListItems)
-        //        {
-                    
-
-        //            if ( (Convert.ToInt16(nodo.GetAttribute("id_area").Count()) > 0) ) {
-        //                Entidad.CEPALStat.area area_item = new Entidad.CEPALStat.area();
-
-        //                area_item.name = nodo.GetAttribute("name");
-        //                area_item.id_area = Convert.ToInt16(nodo.GetAttribute("id_area"));
+                foreach (DataRow dimensions_row in dt_dimensions.Rows)
+                {
+                    //Query para insertar en la tabla de dimensions
+                    sql_query = " INSERT INTO B_1_dimensions " +
+                        " (dimensions_Id, idIndicator, unidad) " +
+                        " VALUES " +
+                        " (@dimensions_Id, @idIndicator, @unidad) ";
                         
-        //                name_area = area_item.name;
-        //                id_area = area_item.id_area;
 
-        //                areas_list.Add(area_item);
-        //            }
-        //            else if ( (Convert.ToInt16(nodo.GetAttribute("idIndicator").Count()) > 0 )){
-        //                List<Entidad.CEPALStat.indicador> indicador_list = new List<Entidad.CEPALStat.indicador>();
-        //                Entidad.CEPALStat.indicador indicador_item = new Entidad.CEPALStat.indicador();
+                    using (var conexion = objConectar.Conectar())
+                    {
+                        var command = new SqlCommand(sql_query, conexion);
+                        command.Parameters.AddWithValue("dimensions_Id", dimensions_row["dimensions_Id"]);
+                        command.Parameters.AddWithValue("idIndicator", dimensions_row["idIndicator"]);
+                        command.Parameters.AddWithValue("unidad", dimensions_row["unidad"]);
+                        
+                        conexion.Open();
 
-        //                indicador_item.name = nodo.GetAttribute("name");
-        //                indicador_item.idIndicator = Convert.ToInt16(nodo.GetAttribute("idIndicator"));
-        //                indicador_list.Add(indicador_item);
+                        if (command.ExecuteNonQuery() > 0)
+                        {
+                            //Si se inserta tema
+                            estado = true;
+                        }
+                        else
+                        {
+                            estado = false;
+                        }
+                    }
+                }
 
-        //                Entidad.CEPALStat.area area_item = new Entidad.CEPALStat.area();
+                foreach (DataRow dim_row in dt_dim.Rows)
+                {
+                    //Query para insertar en la tabla de dimensions
+                    sql_query = " INSERT INTO B_2_dim " +
+                        " (dim_id, name, id, dimensions_Id) " +
+                        " VALUES " +
+                        " (@dim_id, @name, @id, @dimensions_Id) ";
+                        
 
-        //                area_item.name = name_area;
-        //                area_item.id_area = id_area;
-        //                area_item.indicadores = indicador_list;
-        //                areas_list.Add(area_item);
+                    using (var conexion = objConectar.Conectar())
+                    {
+                        var command = new SqlCommand(sql_query, conexion);
+                        command.Parameters.AddWithValue("dim_id", dim_row["dim_id"]);
+                        command.Parameters.AddWithValue("name", dim_row["name"]);
+                        command.Parameters.AddWithValue("id", dim_row["id"]);
+                        command.Parameters.AddWithValue("dimensions_Id", dim_row["dimensions_Id"]);
+                        
+                        conexion.Open();
 
-        //            }
-        //            //area_item.indicadores = indicador_list;
-        //        }
+                        if (command.ExecuteNonQuery() > 0)
+                        {
+                            //Si se inserta tema
+                            estado = true;
+                        }
+                        else
+                        {
+                            estado = false;
+                        }
+                    }
+                }
 
-        //        tema_item.areas = areas_list;
+                foreach (DataRow des_row in dt_des.Rows)
+                {
+                    //Query para insertar en la tabla de dimensions
+                    sql_query = " INSERT INTO B_3_des "+
+                        " ([name] "+
+                        " ,[id] "+
+                        " ,[order]  "+
+                        " ,[in] "+
+                        " ,[dim_Id]) "+
+                        " VALUES "+
+                        " (@name,@id,@order,@in,@dim_Id)";
 
-        //        temas_list.Add(tema_item);
 
+                    using (var conexion = objConectar.Conectar())
+                    {
+                        var command = new SqlCommand(sql_query, conexion);
+                        command.Parameters.AddWithValue("name", des_row["name"]);
+                        command.Parameters.AddWithValue("id", des_row["id"]);
+                        command.Parameters.AddWithValue("order", des_row["order"]);
+                        command.Parameters.AddWithValue("in", des_row["in"]);
+                        command.Parameters.AddWithValue("dim_Id", des_row["dim_Id"]);
 
-        //    }
-        //    catch (XmlException)
-        //    {
-        //        estado = false;
-        //        throw;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        estado = false;
+                        conexion.Open();
+
+                        if (command.ExecuteNonQuery() > 0)
+                        {
+                            //Si se inserta tema
+                            estado = true;
+                        }
+                        else
+                        {
+                            estado = false;
+                        }
+                    }
+                }
+            }
+            catch (SqlException)
+            {
+                estado = false;
+                throw;
+
+            }
+            catch (Exception)
+            {
+                estado = false;
+                throw;
+            }
+            return estado;
+        }
+
+        //Funcion que almacena la informacion de la metadata en la base datos
+        public bool SaveMetaData(DataSet metad_list)
+        {
+            var objConectar = new General.ConectarService();
+
+            bool estado = true;
+            string sql_query = null;
+            try
+            {
+                DataTable dt_metadatos = metad_list.Tables["metadatos"];
+                DataTable dt_dato = metad_list.Tables["dato"];
+                DataTable dt_fuente = metad_list.Tables["fuente"];
+
+                int idIndicator = Convert.ToInt16(dt_metadatos.Rows[0]["idIndicator"].ToString());
                 
-        //        throw;
-        //    }
-            
-        //    return estado;
-        //}
+                foreach (DataRow metadatos_row in dt_metadatos.Rows)
+                {
+                    //Query para insertar en la tabla de dimensions
+                    sql_query = " INSERT INTO C_metadatos " +
+                        " ([idIndicator],[indicador],[tema],[area],[nota] " +
+                        " ,[unidad],[definicion],[caracteristicas],[metodologia] " +
+                        " ,[comentarios]) " +
+                        " VALUES " +
+                        " (@idIndicator,@indicador,@tema,@area,@nota,@unidad,@definicion " +
+                        " ,@caracteristicas,@metodologia,@comentarios) ";
 
+
+
+                    using (var conexion = objConectar.Conectar())
+                    {
+                        var command = new SqlCommand(sql_query, conexion);
+                        command.Parameters.AddWithValue("idIndicator", metadatos_row["idIndicator"]);
+                        command.Parameters.AddWithValue("indicador", metadatos_row["indicador"]);
+                        command.Parameters.AddWithValue("tema", metadatos_row["tema"]);
+                        command.Parameters.AddWithValue("area", metadatos_row["area"]);
+                        command.Parameters.AddWithValue("nota", metadatos_row["nota"]);
+                        command.Parameters.AddWithValue("unidad", metadatos_row["unidad"]);
+                        command.Parameters.AddWithValue("definicion", metadatos_row["definicion"]);
+                        command.Parameters.AddWithValue("caracteristicas", metadatos_row["caracteristicas_dato"]);
+                        command.Parameters.AddWithValue("metodologia", metadatos_row["metodologia_calculo"]);
+                        command.Parameters.AddWithValue("comentarios", metadatos_row["comentarios"]);
+
+                        conexion.Open();
+
+                        if (command.ExecuteNonQuery() > 0)
+                        {
+                            //Si se inserta tema
+                            estado = true;
+                        }
+                        else
+                        {
+                            estado = false;
+                        }
+                    }
+                }
+
+                int cont_item = 0;
+                int correlativo = GetCorrMetaData(idIndicator)+1;
+
+                foreach (DataRow dato_row in dt_dato.Rows)
+                {
+                    cont_item++;
+                    foreach (DataColumn column in dt_dato.Columns)
+                    {
+                        //Query para insertar en la tabla de dimensions
+                        sql_query = " INSERT INTO C_dato " +
+                            " (correlativo, corr_item, idIndicator, columna, valor) " +
+                            " VALUES " +
+                            " (@correlativo, @corr_item, @idIndicator, @columna, @valor) ";
+
+
+                        using (var conexion = objConectar.Conectar())
+                        {
+                            var command = new SqlCommand(sql_query, conexion);
+                            command.Parameters.AddWithValue("correlativo", correlativo);
+                            command.Parameters.AddWithValue("corr_item", cont_item);
+                            command.Parameters.AddWithValue("idIndicator", idIndicator);
+                            command.Parameters.AddWithValue("columna", column.ColumnName);
+                            command.Parameters.AddWithValue("valor", dato_row[column].ToString());
+
+                            conexion.Open();
+
+                            if (command.ExecuteNonQuery() > 0)
+                            {
+                                //Si se inserta tema
+                                estado = true;
+                            }
+                            else
+                            {
+                                estado = false;
+                            }
+                        }
+                    }
+                }
+
+                foreach (DataRow fuente_row in dt_fuente.Rows)
+                {
+                    //Query para insertar en la tabla de dimensions
+                    sql_query = " INSERT INTO C_fuente " +
+                            " ([id],[descripcion],[url_publicacion],[sigla_organismo] " +
+                            " ,[nombre_organismo],[url_organizacion],[fuentes_Id]) " +
+                            " VALUES " +
+                            " (@id, @descripcion, @url_publicacion, @sigla_organismo, @nombre_organismo, @url_organizacion ,@fuentes_Id)";
+
+
+                    using (var conexion = objConectar.Conectar())
+                    {
+                        var command = new SqlCommand(sql_query, conexion);
+                        command.Parameters.AddWithValue("id", fuente_row["id"]);
+                        command.Parameters.AddWithValue("descripcion", fuente_row["descripcion"]);
+                        command.Parameters.AddWithValue("url_publicacion", fuente_row["url_publicacion"]);
+                        command.Parameters.AddWithValue("sigla_organismo", fuente_row["sigla_organismo"]);
+                        command.Parameters.AddWithValue("nombre_organismo", fuente_row["nombre_organismo"]);
+                        command.Parameters.AddWithValue("url_organizacion", fuente_row["url_organizacion"]);
+                        command.Parameters.AddWithValue("fuentes_id", fuente_row["fuentes_id"]);
+
+                        conexion.Open();
+
+                        if (command.ExecuteNonQuery() > 0)
+                        {
+                            //Si se inserta tema
+                            estado = true;
+                        }
+                        else
+                        {
+                            estado = false;
+                        }
+                    }
+                }
+            }
+            catch (SqlException)
+            {
+                estado = false;
+                throw;
+
+            }
+            catch (Exception)
+            {
+                estado = false;
+                throw;
+            }
+            return estado;
+        }
+
+        //Funcion que obtiene el ultimo correlativo
+        int GetCorrMetaData(int idIndicator)
+        {
+            var objConectar = new General.ConectarService();
+            int correlativo = 0;
+            string sql_query = null;
+            var dt_corr = new DataTable();
+            try
+            {
+                sql_query = " SELECT COALESCE(( " +
+                " SELECT MAX(correlativo)  " +
+                " FROM C_dato " +
+                " WHERE idIndicator = @idIndicator ),0) correlativo ";
+
+                using (var conn = objConectar.Conectar())
+                {
+                    var command = new SqlCommand(sql_query, conn);
+                    command.Parameters.AddWithValue("idIndicator", idIndicator);
+                    var da = new SqlDataAdapter(command);
+                    da.Fill(dt_corr);
+                }
+                correlativo = Convert.ToInt32(dt_corr.Rows[0]["correlativo"].ToString());
+            }
+            catch(SqlException)
+            {
+                throw;
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
+            return correlativo;
+        }
 
     }
 }

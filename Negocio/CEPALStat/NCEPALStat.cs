@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-
+using System.Data;
 
 namespace Negocio.CEPALStat
 {
@@ -31,20 +31,27 @@ namespace Negocio.CEPALStat
         }
 
         //Lee archivo y llena listado
-        public List<Entidad.CEPALStat.tema> ReadArchivo(string filename)
+        public DataSet ReadArchivo(string filename)
         {
             return objDCepal.ReadArchivo(filename);
         }
 
-        //Funcion que almacena la informacion en la base datos
-        public bool SaveData(List<Entidad.CEPALStat.tema> temas_list)
+        //Funcion que almacena la informacion de los temas en la base datos
+        public bool SaveDataTheme(DataSet temas_list)
         {
-            return objDCepal.SaveData(temas_list);
+            return objDCepal.SaveDataTheme(temas_list);
         }
 
-        //public bool GetThematicTree()
-        //{
-        //    return objDCepal.GetThematicTree();
-        //}
+        //Funcion que almacena la informacion de las dimensiones en la base datos
+        public bool SaveDataDimensions(DataSet list_dim)
+        {
+            return objDCepal.SaveDataDimensions(list_dim);
+        }
+
+        //Funcion que almacena la informacion de la metadata en la base datos
+        public bool SaveMetaData(DataSet metad_list)
+        {
+            return objDCepal.SaveMetaData(metad_list);
+        }
     }
 }
