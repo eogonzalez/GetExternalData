@@ -14,6 +14,8 @@ namespace GetExternalData.CEPALStat
     public partial class CEPALStat : System.Web.UI.Page
     {
         Negocio.CEPALStat.NCEPALStat objCepal = new Negocio.CEPALStat.NCEPALStat();
+        Negocio.General.NGeneral objGeneral = new Negocio.General.NGeneral();
+
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -26,7 +28,7 @@ namespace GetExternalData.CEPALStat
             string contenido = null;
             
 
-            string filename = "C:/CEPAL/getThematicTree_" + Convert.ToString(DateTime.Today.Year) + "_" + Convert.ToString(DateTime.Today.Month) + "_" + Convert.ToString(DateTime.Today.Day) + ".xml";
+            string filename = "C:/Getdata/CEPAL/getThematicTree_" + Convert.ToString(DateTime.Today.Year) + "_" + Convert.ToString(DateTime.Today.Month) + "_" + Convert.ToString(DateTime.Today.Day) + ".xml";
             string url = @"http://interwp.cepal.org/sisgen/ws/cepalstat/getThematicTree.asp?language=spanish&password=87654321";
             contenido = DateTime.Today.ToString() + " - Verificando si el archivo " +filename+ " ya ha sido cargado.";
 
@@ -34,13 +36,13 @@ namespace GetExternalData.CEPALStat
 
             DataSet temas_list = new DataSet();
 
-            if (objCepal.ExisteArchivo(filename))
+            if (objGeneral.ExisteArchivo(filename))
             {
                 //Si archivo existe
                 contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo ya existe.";
                 txt_log_theme.Text = contenido;
 
-                temas_list = objCepal.ReadArchivo(filename);
+                temas_list = objGeneral.ReadArchivo(filename);
 
                 contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo ha sido cargado.";
                 txt_log_theme.Text = contenido;
@@ -49,21 +51,21 @@ namespace GetExternalData.CEPALStat
             else
             {
                 XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc = objCepal.ObtieneArchivo(url);
+                xmlDoc = objGeneral.ObtieneArchivo(url);
                 //Si archivo no existe
                 SetTheProgress(barCepal, "15%");
                 
                 contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo no existe.";
                 txt_log_theme.Text = contenido;
 
-                objCepal.SaveArchivo(xmlDoc, filename);
+                objGeneral.SaveArchivo(xmlDoc, filename);
 
                 contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo se ha almacenado.";
                 txt_log_theme.Text = contenido;
 
                 SetTheProgress(barCepal, "25%");
 
-                temas_list = objCepal.ReadArchivo(filename);
+                temas_list = objGeneral.ReadArchivo(filename);
 
                 contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo ha sido cargado.";
                 txt_log_theme.Text = contenido;
@@ -89,7 +91,7 @@ namespace GetExternalData.CEPALStat
 
             if (indicador.Length > 0)
 	        {
-                string filename = "C:/CEPAL/Dimensiones/getDimension_" + indicador + "_"+Convert.ToString(DateTime.Today.Year) + "_" + Convert.ToString(DateTime.Today.Month) + "_" + Convert.ToString(DateTime.Today.Day) + ".xml";
+                string filename = "C:/Getdata/CEPAL/Dimensiones/getDimension_" + indicador + "_"+Convert.ToString(DateTime.Today.Year) + "_" + Convert.ToString(DateTime.Today.Month) + "_" + Convert.ToString(DateTime.Today.Day) + ".xml";
                 string url = @"http://interwp.cepal.org/sisgen/ws/cepalstat/getDimensions.asp?idIndicator=" + indicador + "&language=spanish&password=87654321";
                 contenido = DateTime.Today.ToString() + " - Verificando si el archivo " + filename + " ya ha sido cargado.";
 
@@ -97,13 +99,13 @@ namespace GetExternalData.CEPALStat
 
                 DataSet dimension_list = new DataSet();
 
-                if (objCepal.ExisteArchivo(filename))
+                if (objGeneral.ExisteArchivo(filename))
                 {
                     //Si archivo existe
                     contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo ya existe.";
                     txt_log_dim.Text = contenido;
 
-                    dimension_list = objCepal.ReadArchivo(filename);
+                    dimension_list = objGeneral.ReadArchivo(filename);
 
                     contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo ha sido cargado.";
                     txt_log_dim.Text = contenido;
@@ -112,21 +114,21 @@ namespace GetExternalData.CEPALStat
                 else
                 {
                     XmlDocument xmlDoc = new XmlDocument();
-                    xmlDoc = objCepal.ObtieneArchivo(url);
+                    xmlDoc = objGeneral.ObtieneArchivo(url);
                     //Si archivo no existe
                     SetTheProgress(barCepalDim, "15%");
 
                     contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo no existe.";
                     txt_log_dim.Text = contenido;
 
-                    objCepal.SaveArchivo(xmlDoc, filename);
+                    objGeneral.SaveArchivo(xmlDoc, filename);
 
                     contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo se ha almacenado.";
                     txt_log_dim.Text = contenido;
 
                     SetTheProgress(barCepalDim, "25%");
 
-                    dimension_list = objCepal.ReadArchivo(filename);
+                    dimension_list = objGeneral.ReadArchivo(filename);
 
                     contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo ha sido cargado.";
                     txt_log_dim.Text = contenido;
@@ -155,7 +157,7 @@ namespace GetExternalData.CEPALStat
 
             if (indicador.Length > 0)
             {
-                string filename = "C:/CEPAL/Metadata/getMetaData_" + indicador + "_" + Convert.ToString(DateTime.Today.Year) + "_" + Convert.ToString(DateTime.Today.Month) + "_" + Convert.ToString(DateTime.Today.Day) + ".xml";
+                string filename = "C:/Getdata/CEPAL/Metadata/getMetaData_" + indicador + "_" + Convert.ToString(DateTime.Today.Year) + "_" + Convert.ToString(DateTime.Today.Month) + "_" + Convert.ToString(DateTime.Today.Day) + ".xml";
                 string url = @"http://interwp.cepal.org/sisgen/ws/cepalstat/getDataMeta.asp?idIndicator=" + indicador + "&language=spanish&password=87654321";
                 contenido = DateTime.Today.ToString() + " - Verificando si el archivo " + filename + " ya ha sido cargado.";
             
@@ -163,13 +165,13 @@ namespace GetExternalData.CEPALStat
 
                 DataSet metadata_list = new DataSet();
 
-                if (objCepal.ExisteArchivo(filename))
+                if (objGeneral.ExisteArchivo(filename))
                 {
                     //Si archivo existe
                     contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo ya existe.";
                     txt_log_metadata.Text = contenido;
 
-                    metadata_list = objCepal.ReadArchivo(filename);
+                    metadata_list = objGeneral.ReadArchivo(filename);
 
                     contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo ha sido cargado.";
                     txt_log_metadata.Text = contenido;
@@ -178,21 +180,21 @@ namespace GetExternalData.CEPALStat
                 else
                 {
                     XmlDocument xmlDoc = new XmlDocument();
-                    xmlDoc = objCepal.ObtieneArchivo(url);
+                    xmlDoc = objGeneral.ObtieneArchivo(url);
                     //Si archivo no existe
                     SetTheProgress(barCepalMeta, "15%");
 
                     contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo no existe.";
                     txt_log_metadata.Text = contenido;
 
-                    objCepal.SaveArchivo(xmlDoc, filename);
+                    objGeneral.SaveArchivo(xmlDoc, filename);
 
                     contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo se ha almacenado.";
                     txt_log_metadata.Text = contenido;
 
                     SetTheProgress(barCepalMeta, "25%");
 
-                    metadata_list = objCepal.ReadArchivo(filename);
+                    metadata_list = objGeneral.ReadArchivo(filename);
 
                     contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo ha sido cargado.";
                     txt_log_metadata.Text = contenido;
@@ -209,7 +211,6 @@ namespace GetExternalData.CEPALStat
                 SetTheProgress(barCepalMeta, "100%");
             }
         }
-
 
         void SetTheProgress(HtmlGenericControl bar, string value)
         {

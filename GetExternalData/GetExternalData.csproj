@@ -151,6 +151,7 @@
     <Content Include="Account\OpenAuthProviders.ascx" />
     <Content Include="Account\Register.aspx" />
     <Content Include="Account\RegisterExternalLogin.aspx" />
+    <Content Include="BM\BM.aspx" />
     <Content Include="CEPALStat\CEPALStat.aspx" />
     <Content Include="Contact.aspx" />
     <Content Include="Content\bootstrap.css" />
@@ -255,6 +256,13 @@
     </Compile>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="BM\BM.aspx.cs">
+      <DependentUpon>BM.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BM\BM.aspx.designer.cs">
+      <DependentUpon>BM.aspx</DependentUpon>
+    </Compile>
     <Compile Include="CEPALStat\CEPALStat.aspx.cs">
       <DependentUpon>CEPALStat.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
