@@ -13,9 +13,18 @@ namespace Datos.General
     {
         SqlConnection sql_coneccion;
 
-        public SqlConnection Conectar()
+        public SqlConnection Conectar(string db)
         {
-            return sql_coneccion = new SqlConnection(ConfigurationManager.ConnectionStrings["cn"].ConnectionString);
+            if (db == "cepal")
+            {
+                sql_coneccion = new SqlConnection(ConfigurationManager.ConnectionStrings["cn_cepal"].ConnectionString);    
+            }
+            else if (db == "bm")
+            {
+                sql_coneccion = new SqlConnection(ConfigurationManager.ConnectionStrings["cn_bm"].ConnectionString);    
+            }
+
+            return sql_coneccion;
         }
     }
 }

@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BM\BM.cs" />
     <Compile Include="CEPALStat\CEPALStat.cs" />
     <Compile Include="General\ConectarService.cs" />
     <Compile Include="General\General.cs" />

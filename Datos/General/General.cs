@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -20,20 +21,19 @@ namespace Datos.General
         //Lee archivo y llena listado
         public DataSet ReadArchivo(string filename)
         {
-
             var ds = new DataSet();
             try
             {
                 ds.ReadXml(filename, XmlReadMode.InferSchema);
             }
-            catch (XmlException)
+            catch (XmlException e)
             {
-                throw;
+                throw e;
             }
-            catch (Exception)
+            catch (Exception e)
             {
 
-                throw;
+                throw e;
             }
             return ds;
         }
@@ -41,21 +41,20 @@ namespace Datos.General
         //Obtiene archivo del servicio web
         public XmlDocument ObtieneArchivo(string url)
         {
-            XmlDocument xmlDoc = new XmlDocument();
+            var xmlDoc = new XmlDocument();
             try
             {
-
+               
                 xmlDoc.Load(url);
-
             }
-            catch (XmlException)
+            catch (XmlException e)
             {
-                throw;
+                throw e;
             }
-            catch (Exception)
+            catch (Exception e)
             {
 
-                throw;
+                throw e;
             }
 
             return xmlDoc;

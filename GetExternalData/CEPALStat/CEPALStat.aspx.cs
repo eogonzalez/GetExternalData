@@ -23,6 +23,8 @@ namespace GetExternalData.CEPALStat
 
         protected void btnGet_Click(object sender, EventArgs e)
         {
+            
+
             SetTheProgress(barCepal, "5%");
             //Verifica si archivo ya ha sido descargado hoy
             string contenido = null;
@@ -46,7 +48,7 @@ namespace GetExternalData.CEPALStat
 
                 contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo ha sido cargado.";
                 txt_log_theme.Text = contenido;
-                
+                //System.Windows.Forms.Application.DoEvents();
             }
             else
             {
@@ -69,6 +71,7 @@ namespace GetExternalData.CEPALStat
 
                 contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo ha sido cargado.";
                 txt_log_theme.Text = contenido;
+                //System.Windows.Forms.Application.DoEvents();
             }
             
             SetTheProgress(barCepal, "50%");
@@ -76,7 +79,7 @@ namespace GetExternalData.CEPALStat
 
             contenido = contenido + "\n" + DateTime.Today.ToString() + " - La estructura del archivo ha sido almacenado en la Base de Datos.";
             txt_log_theme.Text = contenido;
-
+            //System.Windows.Forms.Application.DoEvents();
             //objCepal.GetThematicTree();
             SetTheProgress(barCepal, "100%");
         }

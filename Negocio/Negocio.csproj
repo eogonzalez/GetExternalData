@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BM\NBM.cs" />
     <Compile Include="CEPALStat\NCEPALStat.cs" />
     <Compile Include="General\NGeneral.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

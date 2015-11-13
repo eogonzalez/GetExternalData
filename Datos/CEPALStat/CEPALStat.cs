@@ -34,7 +34,7 @@ namespace Datos.CEPALStat
                         " (@item_Id, @name, @idIndicator, @id_area, "+
                         " @item_Id_0, @id_tema) ";
 
-                    using ( var conexion = objConectar.Conectar())
+                    using (var conexion = objConectar.Conectar("cepal"))
                     {
                         var command = new SqlCommand(sql_query, conexion);
                         command.Parameters.AddWithValue("item_Id", temas_row["item_Id"]);
@@ -90,9 +90,9 @@ namespace Datos.CEPALStat
                         " (dimensions_Id, idIndicator, unidad) " +
                         " VALUES " +
                         " (@dimensions_Id, @idIndicator, @unidad) ";
-                        
 
-                    using (var conexion = objConectar.Conectar())
+
+                    using (var conexion = objConectar.Conectar("cepal"))
                     {
                         var command = new SqlCommand(sql_query, conexion);
                         command.Parameters.AddWithValue("dimensions_Id", dimensions_row["dimensions_Id"]);
@@ -120,9 +120,9 @@ namespace Datos.CEPALStat
                         " (dim_id, name, id, dimensions_Id) " +
                         " VALUES " +
                         " (@dim_id, @name, @id, @dimensions_Id) ";
-                        
 
-                    using (var conexion = objConectar.Conectar())
+
+                    using (var conexion = objConectar.Conectar("cepal"))
                     {
                         var command = new SqlCommand(sql_query, conexion);
                         command.Parameters.AddWithValue("dim_id", dim_row["dim_id"]);
@@ -157,7 +157,7 @@ namespace Datos.CEPALStat
                         " (@name,@id,@order,@in,@dim_Id)";
 
 
-                    using (var conexion = objConectar.Conectar())
+                    using (var conexion = objConectar.Conectar("cepal"))
                     {
                         var command = new SqlCommand(sql_query, conexion);
                         command.Parameters.AddWithValue("name", des_row["name"]);
@@ -222,7 +222,7 @@ namespace Datos.CEPALStat
 
 
 
-                    using (var conexion = objConectar.Conectar())
+                    using (var conexion = objConectar.Conectar("cepal"))
                     {
                         var command = new SqlCommand(sql_query, conexion);
                         command.Parameters.AddWithValue("idIndicator", metadatos_row["idIndicator"]);
@@ -265,7 +265,7 @@ namespace Datos.CEPALStat
                             " (@correlativo, @corr_item, @idIndicator, @columna, @valor) ";
 
 
-                        using (var conexion = objConectar.Conectar())
+                        using (var conexion = objConectar.Conectar("cepal"))
                         {
                             var command = new SqlCommand(sql_query, conexion);
                             command.Parameters.AddWithValue("correlativo", correlativo);
@@ -299,7 +299,7 @@ namespace Datos.CEPALStat
                             " (@id, @descripcion, @url_publicacion, @sigla_organismo, @nombre_organismo, @url_organizacion ,@fuentes_Id)";
 
 
-                    using (var conexion = objConectar.Conectar())
+                    using (var conexion = objConectar.Conectar("cepal"))
                     {
                         var command = new SqlCommand(sql_query, conexion);
                         command.Parameters.AddWithValue("id", fuente_row["id"]);
@@ -352,7 +352,7 @@ namespace Datos.CEPALStat
                 " FROM C_dato " +
                 " WHERE idIndicator = @idIndicator ),0) correlativo ";
 
-                using (var conn = objConectar.Conectar())
+                using (var conn = objConectar.Conectar("cepal"))
                 {
                     var command = new SqlCommand(sql_query, conn);
                     command.Parameters.AddWithValue("idIndicator", idIndicator);
