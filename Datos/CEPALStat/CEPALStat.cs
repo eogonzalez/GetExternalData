@@ -13,12 +13,11 @@ namespace Datos.CEPALStat
 {
     public class CEPALStat
     {
+        General.ConectarService objConectar = new General.ConectarService();
         
         //Funcion que almacena la informacion de los temas en la base datos
         public bool SaveDataTheme(DataSet temas_list)
         {
-            var objConectar = new General.ConectarService();
- 
             bool estado = true;
             string sql_query = null;
             try
@@ -73,8 +72,6 @@ namespace Datos.CEPALStat
         //Funcion que almacena la informacion de las dimensiones en la base datos
         public bool SaveDataDimensions(DataSet list_dim)
         {
-            var objConectar = new General.ConectarService();
-
             bool estado = true;
             string sql_query = null;
             try
@@ -197,8 +194,6 @@ namespace Datos.CEPALStat
         //Funcion que almacena la informacion de la metadata en la base datos
         public bool SaveMetaData(DataSet metad_list)
         {
-            var objConectar = new General.ConectarService();
-
             bool estado = true;
             string sql_query = null;
             try
@@ -341,7 +336,6 @@ namespace Datos.CEPALStat
         //Funcion que obtiene el ultimo correlativo
         int GetCorrMetaData(int idIndicator)
         {
-            var objConectar = new General.ConectarService();
             int correlativo = 0;
             string sql_query = null;
             var dt_corr = new DataTable();

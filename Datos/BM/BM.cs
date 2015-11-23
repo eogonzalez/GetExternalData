@@ -2,18 +2,23 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Datos.BM
 {
     public class BM
     {
+        General.ConectarService objConectar = new General.ConectarService();
+
         //Funcion que almacena informacion de los indicadores del banco mundial
         public bool SaveDataIndicators(DataSet indicator_list)
         {
-            var objConectar = new General.ConectarService();
             bool estado = true;
             string sql_query = null;
             try
@@ -181,6 +186,137 @@ namespace Datos.BM
             return estado;
         }
 
-        
+        //Funcion que obtiene archivo y descoprime
+        public XmlDocument ObtenerArchivoGzip(string url)
+        {
+            var xmlDoc = new XmlDocument();
+            try
+            {
+                WebRequest request = WebRequest.Create(url);
+                WebResponse response = request.GetResponse();
+                Stream dataStream = response.GetResponseStream();
+                //StreamReader reader = new StreamReader(dataStream);
+                using (GZipStream gzip = new GZipStream(dataStream, CompressionMode.Decompress))
+                {
+                    using (XmlReader xmlwriter = XmlReader.Create(gzip, new XmlReaderSettings()))
+                    {
+                        xmlwriter.MoveToContent();
+
+                        xmlDoc.Load(xmlwriter);
+                    }
+                }
+            }
+            catch (XmlException)
+            {
+                throw;
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
+            return xmlDoc;
+        }
+
+        //Funcion que almacena informacion de los paises del banco mundial
+        public bool SaveDataCountries(DataSet country_list)
+        {
+            bool estado = true;
+            string sql_query = null;
+            try
+            {
+                DataTable dt_countries = country_list.Tables["countries"];
+                DataTable dt_country = country_list.Tables["country"];
+                DataTable dt_region = country_list.Tables["region"];
+                DataTable dt_adminregion = country_list.Tables["adminregion"];
+                DataTable dt_incomelevel = country_list.Tables["incomeLevel"];
+                DataTable dt_lendingType = country_list.Tables["lendingType"];
+
+                foreach (DataRow row_countries in dt_countries.Rows)
+                {
+                    //Query para insertar en la tabla indicators
+                    sql_query = " INSERT INTO C_countries " +
+                        " (countries_id, page, pages, per_page, total)" +
+                        " VALUES " +
+                        " (@countries_id, @page, @pages, @per_page, @total) ";
+
+                    using (var conexion = objConectar.Conectar("bm"))
+                    {
+                        var command = new SqlCommand(sql_query, conexion);
+                        command.Parameters.AddWithValue("countries_id", row_countries["countries_id"]);
+                        command.Parameters.AddWithValue("page", row_countries["page"]);
+                        command.Parameters.AddWithValue("pages", row_countries["pages"]);
+                        command.Parameters.AddWithValue("per_page", row_countries["per_page"]);
+                        command.Parameters.AddWithValue("total", row_countries["total"]);
+                        conexion.Open();
+                        if (command.ExecuteNonQuery() > 0)
+                        {
+                            estado = true;
+                        }
+                        else
+                        {
+                            estado = false;
+                        }
+                    }
+                }
+
+                foreach (DataRow row_country in dt_country.Rows)
+                {
+                    //Query para insertar en la tabla indicators
+                    sql_query = " INSERT INTO C_country " +
+                        " (iso2Code, name, country_Id, capitalCity, longitude, latitude, id, countries_Id)" +
+                        " VALUES " +
+                        " (@iso2Code, @name, @country_Id, @capitalCity, @longitude, @latitude, @id, @countries_Id) ";
+
+                    using (var conexion = objConectar.Conectar("bm"))
+                    {
+                        var command = new SqlCommand(sql_query, conexion);
+                        command.Parameters.AddWithValue("iso2Code", row_country["iso2Code"]);
+                        command.Parameters.AddWithValue("name", row_country["name"]);
+                        command.Parameters.AddWithValue("country_Id", row_country["country_Id"]);
+                        command.Parameters.AddWithValue("capitalCity", row_country["capitalCity"]);
+                        command.Parameters.AddWithValue("longitude", row_country["longitude"]);
+                        command.Parameters.AddWithValue("latitude", row_country["latitude"]);
+                        command.Parameters.AddWithValue("id", row_country["id"]);
+                        command.Parameters.AddWithValue("countries_Id", row_country["countries_Id"]);
+                        conexion.Open();
+                        if (command.ExecuteNonQuery() > 0)
+                        {
+                            estado = true;
+                        }
+                        else
+                        {
+                            estado = false;
+                        }
+                    }
+                }
+
+                foreach (DataRow row_region in dt_region.Rows)
+                {
+                    
+                }
+
+                foreach (DataRow row_adminregion in dt_adminregion.Rows)
+                {
+                    
+                }
+
+                foreach (DataRow row_incomelevel in dt_incomelevel.Rows)
+                {
+                    
+                }
+
+                foreach (DataRow row_lendingType in dt_lendingType.Rows)
+                {
+                    
+                }
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
+            return estado;
+        }
     }
 }

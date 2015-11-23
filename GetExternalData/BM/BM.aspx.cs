@@ -63,7 +63,7 @@ namespace GetExternalData.BM
             else
             {
                 XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc = objGeneral.ObtieneArchivo(url);
+                xmlDoc = objBM.ObtenerArchivoGzip(url);
                 //Si archivo no existe
                 SetTheProgress(barBMInicators, "15%");
 
@@ -112,8 +112,6 @@ namespace GetExternalData.BM
             //Verifica si archivo ya ha sido descargado hoy
             string contenido = null;
 
-            
-
             string filename = "C:/Getdata/BM/getPaises_" + Convert.ToString(DateTime.Today.Year) + "_" + Convert.ToString(DateTime.Today.Month) + "_" + Convert.ToString(DateTime.Today.Day) + ".xml";
             string url = @"http://api.worldbank.org/countries";
             contenido = DateTime.Today.ToString() + " - Verificando si el archivo " + filename + " ya ha sido cargado.";
@@ -137,22 +135,8 @@ namespace GetExternalData.BM
             else
             {
                 var xmlDoc = new XmlDocument();
-                WebRequest request = WebRequest.Create(url);
-                WebResponse response = request.GetResponse();
-                Stream dataStream = response.GetResponseStream();
-                //StreamReader reader = new StreamReader(dataStream);
-                using (GZipStream gzip = new GZipStream(dataStream, CompressionMode.Decompress))
-                {
-                    using (XmlReader xmlwriter = XmlReader.Create(gzip, new XmlReaderSettings()))
-                    {
-                        xmlwriter.MoveToContent();
-                        
-                        xmlDoc.Load(xmlwriter);
-                    }
-                }
+                xmlDoc = objBM.ObtenerArchivoGzip(url);
                 
-          
-                //xmlDoc = objGeneral.ObtieneArchivo(url);
 
                 //Si archivo no existe
                 SetTheProgress(bar_get_paises_bm, "15%");
@@ -170,10 +154,10 @@ namespace GetExternalData.BM
                 paises_list = objGeneral.ReadArchivo(filename);
 
                 string total_registros = null;
-                total_registros = paises_list.Tables["indicators"].Rows[0]["total"].ToString();
+                total_registros = paises_list.Tables["countries"].Rows[0]["total"].ToString();
 
                 url = @"http://api.worldbank.org/es/countries?per_page=" + total_registros;
-                filename = "C:/Getdata/BM/getPaises_full_" + Convert.ToString(DateTime.Today.Year) + "_" + Convert.ToString(DateTime.Today.Month) + "_" + Convert.ToString(DateTime.Today.Day) + ".xml";
+                //filename = "C:/Getdata/BM/getPaises_full_" + Convert.ToString(DateTime.Today.Year) + "_" + Convert.ToString(DateTime.Today.Month) + "_" + Convert.ToString(DateTime.Today.Day) + ".xml";
 
                 xmlDoc = objGeneral.ObtieneArchivo(url);
                 objGeneral.SaveArchivo(xmlDoc, filename);
@@ -185,7 +169,7 @@ namespace GetExternalData.BM
 
             SetTheProgress(bar_get_paises_bm, "50%");
 
-            //objBM.SaveDataIndicators(paises_list);
+            objBM.SaveDataCountries(paises_list);
 
             contenido = contenido + "\n" + DateTime.Today.ToString() + " - La estructura del archivo ha sido almacenado en la Base de Datos.";
             txt_log_paises_bm.Text = contenido;
