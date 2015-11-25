@@ -29,5 +29,11 @@ namespace Negocio.BM
         {
             return objBM.SaveDataCountries(country_list);
         }
+
+        //Funcion que almacena metadata de indicador
+        public bool SaveMetaData(DataSet metadata_list)
+        {
+            return objBM.SaveMetaData(metadata_list);
+        }
     }
 }

@@ -262,7 +262,7 @@ namespace Datos.BM
 
                 foreach (DataRow row_country in dt_country.Rows)
                 {
-                    //Query para insertar en la tabla indicators
+                    //Query para insertar en la tabla C_country
                     sql_query = " INSERT INTO C_country " +
                         " (iso2Code, name, country_Id, capitalCity, longitude, latitude, id, countries_Id)" +
                         " VALUES " +
@@ -293,22 +293,216 @@ namespace Datos.BM
 
                 foreach (DataRow row_region in dt_region.Rows)
                 {
-                    
+                    //Query para insertar en la tabla C_Region
+                    sql_query = " INSERT INTO C_region " +
+                        " (id, region_Text, country_Id) " +
+                        " VALUES " +
+                        " (@id, @region_Text, @country_Id) ";
+
+                    using (var conexion = objConectar.Conectar("bm"))
+                    {
+                        var command = new SqlCommand(sql_query, conexion);
+                        command.Parameters.AddWithValue("id", row_region["id"]);
+                        command.Parameters.AddWithValue("region_Text", row_region["region_Text"]);
+                        command.Parameters.AddWithValue("country_Id", row_region["country_Id"]);
+                        conexion.Open();
+
+                        if (command.ExecuteNonQuery() > 0)
+                        {
+                            estado = true;
+                        }
+                        else
+                        {
+                            estado = false;
+                        }
+                    }
                 }
 
                 foreach (DataRow row_adminregion in dt_adminregion.Rows)
                 {
-                    
+                    //Query para insertar en la tabla C_adminregion
+                    sql_query = " INSERT INTO C_adminregion " +
+                        " (id, adminregion_Text, country_Id) " +
+                        " VALUES " +
+                        " (@id, @adminregion_Text, @country_Id) ";
+
+                    using (var conexion = objConectar.Conectar("bm"))
+                    {
+                        var command = new SqlCommand(sql_query, conexion);
+                        command.Parameters.AddWithValue("id", row_adminregion["id"]);
+                        command.Parameters.AddWithValue("adminregion_Text", row_adminregion["adminregion_Text"]);
+                        command.Parameters.AddWithValue("country_Id", row_adminregion["country_Id"]);
+                        conexion.Open();
+
+                        if (command.ExecuteNonQuery() > 0)
+                        {
+                            estado = true;
+                        }
+                        else
+                        {
+                            estado = false;
+                        }
+                    }
                 }
 
                 foreach (DataRow row_incomelevel in dt_incomelevel.Rows)
                 {
-                    
+                    //Query para insertar en la tabla C_incomeLevel
+                    sql_query = " INSERT INTO C_incomeLevel " +
+                        " (id, incomeLevel_Text, country_Id) " +
+                        " VALUES " +
+                        " (@id, @incomeLevel_Text, @country_Id) ";
+
+                    using (var conexion = objConectar.Conectar("bm"))
+                    {
+                        var command = new SqlCommand(sql_query, conexion);
+                        command.Parameters.AddWithValue("id", row_incomelevel["id"]);
+                        command.Parameters.AddWithValue("incomeLevel_Text", row_incomelevel["incomeLevel_Text"]);
+                        command.Parameters.AddWithValue("country_Id", row_incomelevel["country_Id"]);
+                        conexion.Open();
+
+                        if (command.ExecuteNonQuery() > 0)
+                        {
+                            estado = true;
+                        }
+                        else
+                        {
+                            estado = false;
+                        }
+                    }
                 }
 
                 foreach (DataRow row_lendingType in dt_lendingType.Rows)
                 {
-                    
+                    //Query para insertar en la tabla C_lendingType
+                    sql_query = " INSERT INTO C_lendingType " +
+                        " (id, lendingType_Text, country_Id) " +
+                        " VALUES " +
+                        " (@id, @lendingType_Text, @country_Id) ";
+
+                    using (var conexion = objConectar.Conectar("bm"))
+                    {
+                        var command = new SqlCommand(sql_query, conexion);
+                        command.Parameters.AddWithValue("id", row_lendingType["id"]);
+                        command.Parameters.AddWithValue("lendingType_Text", row_lendingType["lendingType_Text"]);
+                        command.Parameters.AddWithValue("country_Id", row_lendingType["country_Id"]);
+                        conexion.Open();
+
+                        if (command.ExecuteNonQuery() > 0)
+                        {
+                            estado = true;
+                        }
+                        else
+                        {
+                            estado = false;
+                        }
+                    }
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
+            return estado;
+        }
+
+        //Funcion que almacena metadata de indicador
+        public bool SaveMetaData(DataSet metadata_list)
+        {
+            bool estado = true;
+            string sql_query = null;
+            try
+            {
+                DataTable dt_data = metadata_list.Tables["data"];
+                DataTable dt_indicator = metadata_list.Tables["indicator"];
+                DataTable dt_country = metadata_list.Tables["country"];
+
+                foreach (DataRow row_data in dt_data.Rows)
+                {
+                    //Query para insertar en la tabla data
+                    sql_query = " INSERT INTO D_data " +
+                        " (data_id, date, value, decimal, page, pages, per_page)" +
+                        " VALUES " +
+                        " (@data_id, @date, @value, @decimal, @page, @pages, @per_page) ";
+
+                    using (var conexion = objConectar.Conectar("bm"))
+                    {
+                        var command = new SqlCommand(sql_query, conexion);
+                        command.Parameters.AddWithValue("data_id", row_data["data_id"]);
+                        command.Parameters.AddWithValue("date", row_data["date"]);
+                        command.Parameters.AddWithValue("value", row_data["value"]);
+                        command.Parameters.AddWithValue("decimal", row_data["decimal"]);
+                        command.Parameters.AddWithValue("page", row_data["page"]);
+                        command.Parameters.AddWithValue("pages", row_data["pages"]);
+                        command.Parameters.AddWithValue("per_page", row_data["per_page"]);
+                        conexion.Open();
+                        if (command.ExecuteNonQuery() > 0)
+                        {
+                            estado = true;
+                        }
+                        else
+                        {
+                            estado = false;
+                        }
+                    }
+                }
+
+                foreach (DataRow row_indicator in dt_indicator.Rows)
+                {
+                    //Query para insertar en la tabla indicator
+                    sql_query = " INSERT INTO D_indicator " +
+                        " (id, indicator_Text, data_Id)" +
+                        " VALUES " +
+                        " (@id, @indicator_Text, @data_Id) ";
+
+                    using (var conexion = objConectar.Conectar("bm"))
+                    {
+                        var command = new SqlCommand(sql_query, conexion);
+                        command.Parameters.AddWithValue("id", row_indicator["id"]);
+                        command.Parameters.AddWithValue("indicator_Text", row_indicator["indicator_Text"]);
+                        command.Parameters.AddWithValue("data_Id", row_indicator["data_id"]);
+                        conexion.Open();
+
+                        if (command.ExecuteNonQuery() > 0)
+                        {
+                            estado = true;
+                        }
+                        else
+                        {
+                            estado = false;
+                        }
+                    }
+                }
+
+                foreach (DataRow row_country in dt_country.Rows)
+                {
+                    //Query para insertar en la tabla country
+                    sql_query = " INSERT INTO D_country " +
+                        " (id, country_Text, data_Id)" +
+                        " VALUES " +
+                        " (@id, @country_Text, @data_Id) ";
+
+                    using (var conexion = objConectar.Conectar("bm"))
+                    {
+                        var command = new SqlCommand(sql_query, conexion);
+                        command.Parameters.AddWithValue("id", row_country["id"]);
+                        command.Parameters.AddWithValue("country_Text", row_country["country_Text"]);
+                        command.Parameters.AddWithValue("data_id", row_country["data_id"]);
+                        conexion.Open();
+                        if (command.ExecuteNonQuery() > 0)
+                        {
+                            estado = true;
+                        }
+                        else
+                        {
+                            estado = false;
+                        }
+                    }
                 }
             }
             catch (Exception)
