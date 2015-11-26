@@ -44,10 +44,19 @@ namespace Datos.General
             var xmlDoc = new XmlDocument();
             try
             {
-               
-                xmlDoc.Load(url);
+                HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+                req.Timeout = 1000 * 60 * 5; //milisegundos
+                WebResponse res = req.GetResponse();
+                Stream responseStream = res.GetResponseStream();
+                xmlDoc.Load(responseStream);
+                responseStream.Close();
+                //xmlDoc.Load(url);
             }
             catch (XmlException e)
+            {
+                throw e;
+            }
+            catch  (WebException e)
             {
                 throw e;
             }

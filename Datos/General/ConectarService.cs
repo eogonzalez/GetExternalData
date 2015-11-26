@@ -23,6 +23,10 @@ namespace Datos.General
             {
                 sql_coneccion = new SqlConnection(ConfigurationManager.ConnectionStrings["cn_bm"].ConnectionString);    
             }
+            else if (db == "un")
+            {
+                sql_coneccion = new SqlConnection(ConfigurationManager.ConnectionStrings["cn_un"].ConnectionString);
+            }
 
             return sql_coneccion;
         }
