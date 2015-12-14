@@ -26,9 +26,7 @@ namespace GetExternalData.COMTRADE
         }
 
         protected void btnGetCommodity_Click(object sender, EventArgs e)
-        {
-            //System.Windows.Forms.Application.DoEvents();
-
+        {          
             SetTheProgress(bar_UN_Commodity, "5%");
             //Verifica si archivo ya ha sido descargado hoy
             string contenido = null;
@@ -46,53 +44,11 @@ namespace GetExternalData.COMTRADE
 
                 txt_log_Commodity.Text = contenido;
 
-                DataSet commodities_list = new DataSet();
+                ManageFile(filename, url, "SAC", txt_log_Commodity);
 
-                if (objGeneral.ExisteArchivo(filename))
-                {
-                    //Si archivo existe
-                    contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo ya existe.";
-                    txt_log_Commodity.Text = contenido;
-
-                    commodities_list = objGeneral.ReadArchivo(filename);
-
-                    contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo ha sido cargado.";
-                    txt_log_Commodity.Text = contenido;
-
-                }
-                else
-                {
-                    XmlDocument xmlDoc = new XmlDocument();
-                    //xmlDoc = objBM.ObtenerArchivoGzip(url);
-                    xmlDoc = objGeneral.ObtieneArchivo(url);
-                    //Si archivo no existe
-                    SetTheProgress(bar_UN_Commodity, "15%");
-
-                    contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo no existe.";
-                    txt_log_Commodity.Text = contenido;
-
-                    objGeneral.SaveArchivo(xmlDoc, filename);
-
-                    contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo se ha almacenado.";
-                    txt_log_Commodity.Text = contenido;
-
-                    SetTheProgress(bar_UN_Commodity, "25%");
-
-                    commodities_list = objGeneral.ReadArchivo(filename);
-
-                    contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo ha sido cargado.";
-                    txt_log_Commodity.Text = contenido;
-                }
-
-                SetTheProgress(bar_UN_Commodity, "50%");
-
-                
-                objUN.SaveCommodity(commodities_list);
-
-                contenido = contenido + "\n" + DateTime.Today.ToString() + " - La estructura del archivo ha sido almacenado en la Base de Datos.";
+                contenido = contenido + "\n" + DateTime.Now.ToString() + " - La estructura del archivo ha sido almacenado en la Base de Datos.";
                 txt_log_Commodity.Text = contenido;
 
-                //objCepal.GetThematicTree();
                 SetTheProgress(bar_UN_Commodity, "100%");
             }
         }
@@ -105,22 +61,138 @@ namespace GetExternalData.COMTRADE
 
             string filename = "C:/Getdata/UN/getCountries_" + Convert.ToString(DateTime.Today.Year) + "_" + Convert.ToString(DateTime.Today.Month) + "_" + Convert.ToString(DateTime.Today.Day) + ".xml";
             string url = @"http://comtrade.un.org/ws/refs/getCountryList.aspx";
-            contenido = DateTime.Today.ToString() + " - Verificando si el archivo " + filename + " ya ha sido cargado.";
+            contenido = DateTime.Now.ToString() + " - Verificando si el archivo " + filename + " ya ha sido cargado.";
 
             txt_log_paises_un.Text = contenido;
 
-            DataSet country_list = new DataSet();
+            ManageFile(filename, url, "PAISES", txt_log_paises_un);
+
+            contenido = contenido + "\n" + DateTime.Now.ToString() + " - La estructura del archivo ha sido almacenado en la Base de Datos.";
+            txt_log_paises_un.Text = contenido;
+
+            SetTheProgress(bar_get_paises_un, "100%");
+        }
+
+        protected void btn_get_metadata_un_Click(object sender, EventArgs e)
+        {
+            SetTheProgress(bar_get_metadata_un, "5%");
+            
+            string contenido = null;
+            string str_sistem_harmony = null;
+            string str_codigo_pais = null;
+            int year = 0;
+
+            if (!string.IsNullOrEmpty(txtSistemaArmonizado.Text) && !string.IsNullOrEmpty(txtPais.Text) && !string.IsNullOrEmpty(txtAnio.Text))
+            {//Si las variables no estan vacias
+
+                str_sistem_harmony = txtSistemaArmonizado.Text;
+                str_codigo_pais = txtPais.Text;
+                year = Convert.ToInt32(txtAnio.Text);
+
+                if (!objUN.ExisteCarga(Convert.ToInt32(str_codigo_pais), year, str_sistem_harmony))
+                {//Si no existe 
+                    objUN.SaveNuevaCarga(Convert.ToInt32(str_codigo_pais), year, str_sistem_harmony);
+                }
+
+                ProcesaSolicitud(str_sistem_harmony, str_codigo_pais, year);
+            }
+            else
+            {
+                contenido = DateTime.Now.ToString() + " -ERROR- Las variables no deben de quedar vacias.";
+                txt_log_metadata.Text = contenido;
+                return;
+            }
+
+            SetTheProgress(bar_get_metadata_un, "100%");
+
+        }
+
+        protected bool ProcesaSolicitud(string sistema_harmony, string codigo_pais, int año)
+        {
+            bool estado = true;
+            bool finaliza = true;
+            string contenido = null;
+            var dt_incisos = new DataTable();
+            string filename = null;
+            string url = null;
+            string commodity_code = null;
+            dt_incisos = objUN.IncisosPendientesList(sistema_harmony, Convert.ToInt32(codigo_pais), año);
+
+            contenido = DateTime.Now.ToString() + " - Inicia proceso de carga.";
+            txt_log_metadata.Text = contenido;
+
+            foreach (DataRow item_inciso in dt_incisos.Rows)
+            {
+                finaliza = false;
+                commodity_code = item_inciso["code"].ToString();
+
+                if (!objUN.ExisteIncisoDetalle(Convert.ToInt32(codigo_pais), año, sistema_harmony, commodity_code))
+                {//Si no existe
+                    //Agrego Inciso Detalle
+                    objUN.SaveIncisoDetalle(Convert.ToInt32(codigo_pais), año, sistema_harmony, commodity_code);
+                }
+
+                filename = "C:/Getdata/UN/metadata/getMetaData_" + commodity_code + "_" + codigo_pais + "_" + año.ToString()+"_" + Convert.ToString(DateTime.Today.Year) + "_" + Convert.ToString(DateTime.Today.Month) + ".xml";
+                url = @"http://comtrade.un.org/ws/get.aspx?cc=" + commodity_code + "??&px=" + sistema_harmony + "&r=" + codigo_pais + "&y=" + año.ToString() + "&qt=n&detail=true&comp=false&code=jjgdN75QdqmVL+fIhYRv3iZPQMJzhIUGBoyISS79Dzw8pKPHiads2eor2IFmGpHV9v3t7uTrB/MW8aaJWj0HaSKoebDL0VNJ9PAcdlAvVNS1YcsTNzzFZmBxp4yH5H4vSLTB1A6SwKmO9Kc+edweEP1YSf0MW8p+nNruPQkVaXg=";
+
+                if (ManageFile(filename, url, "META", txt_log_metadata))
+                {
+                    estado = true;
+                }
+                else
+                {
+                    estado = false;
+                    break;
+                }
+
+                //Actualizo estado de inciso detalle
+                objUN.UpdateIncisoDetalle(Convert.ToInt32(codigo_pais), año, sistema_harmony, commodity_code);
+
+                break;
+            }
+
+            if (finaliza)
+            {//Si ya no existen archivos a descargar
+                if (!objUN.FinalizaCarga(Convert.ToInt32(codigo_pais), año, sistema_harmony)
+                {//Si no ha finalizado carga
+                    //Actualizo encabezado
+                    objUN.UpdateCarga(Convert.ToInt16(codigo_pais), año, sistema_harmony);    
+                }
+                
+            }
+
+            contenido = contenido + "\n" + DateTime.Now.ToString() + " - El proceso ha terminado.";
+            txt_log_metadata.Text = contenido;
+
+            return estado;
+        }
+
+        protected bool ManageFile(string filename, string url, string dimension, TextBox control_log)
+        {// Verifica si archivo ha sido descargado. Si no ha sido descargado lo descarga del url especificado.
+            HtmlGenericControl bar = new HtmlGenericControl();
+            
+             
+            string contenido = null;
+            bool estado = true;
+
+
+            // http://comtrade.un.org/ws/get.aspx?cc=??????&px=H2&r=156&y=2007&p=0&rg=2&tv1=0&tv2=500000000&so=1001&qt=n&detail=true&comp=false&max=10&code=YourCode
+            // http://comtrade.un.org/ws/get.aspx?cc=??????&px=H2&r=156&y=2007&p=0&rg=2&tv1=0&tv2=500000000&so=1001&qt=n&detail=true&comp=false&max=10
+            // http://comtrade.un.org/ws/get.aspx?cc=010190&px=H2&r=156&y=2007&qt=n&detail=true&comp=false
+            
+            DataSet metadata_list = new DataSet();
 
             if (objGeneral.ExisteArchivo(filename))
             {
                 //Si archivo existe
-                contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo ya existe.";
-                txt_log_paises_un.Text = contenido;
+                contenido = contenido + "\n" + DateTime.Now.ToString() + " - El archivo ya existe.";
+                control_log.Text = contenido;
+                
 
-                country_list = objGeneral.ReadArchivo(filename);
+                metadata_list = objGeneral.ReadArchivo(filename);
 
-                contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo ha sido cargado.";
-                txt_log_paises_un.Text = contenido;
+                contenido = contenido + "\n" + DateTime.Now.ToString() + " - El archivo ha sido cargado.";
+                control_log.Text = contenido;
 
             }
             else
@@ -129,34 +201,50 @@ namespace GetExternalData.COMTRADE
                 //xmlDoc = objBM.ObtenerArchivoGzip(url);
                 xmlDoc = objGeneral.ObtieneArchivo(url);
                 //Si archivo no existe
-                SetTheProgress(bar_get_paises_un, "15%");
+                SetTheProgress(bar, "15%");
 
-                contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo no existe.";
-                txt_log_paises_un.Text = contenido;
+                contenido = contenido + "\n" + DateTime.Now.ToString() + " - El archivo no existe.";
+                control_log.Text = contenido;
 
                 objGeneral.SaveArchivo(xmlDoc, filename);
 
-                contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo se ha almacenado.";
-                txt_log_paises_un.Text = contenido;
+                contenido = contenido + "\n" + DateTime.Now.ToString() + " - El archivo se ha almacenado.";
+                control_log.Text = contenido;
 
-                SetTheProgress(bar_get_paises_un, "25%");
+                SetTheProgress(bar, "25%");
 
-                country_list = objGeneral.ReadArchivo(filename);
+                metadata_list = objGeneral.ReadArchivo(filename);
 
-                contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo ha sido cargado.";
-                txt_log_paises_un.Text = contenido;
+                contenido = contenido + "\n" + DateTime.Now.ToString() + " - El archivo ha sido cargado.";
+                control_log.Text = contenido;
             }
 
-            SetTheProgress(bar_get_paises_un, "50%");
+            SetTheProgress(bar, "50%");
 
+            
+            if (metadata_list != null)
+            {//Si no es nulo
+                if (metadata_list.Tables.Count > 0)
+                {//Si trae registros
+                    if (dimension == "PAISES")
+                    {
+                        estado = objUN.SaveCountry(metadata_list);
+                    }
+                    else if (dimension == "SAC")
+                    {
+                        estado = objUN.SaveCommodity(metadata_list);
+                    }
+                    else
+                    {
+                        estado = objUN.SaveMetaData(metadata_list);
+                    }
+                    
+                }
+                
+            }
 
-            objUN.SaveCountry(country_list);
-
-            contenido = contenido + "\n" + DateTime.Today.ToString() + " - La estructura del archivo ha sido almacenado en la Base de Datos.";
-            txt_log_paises_un.Text = contenido;
-
-            //objCepal.GetThematicTree();
-            SetTheProgress(bar_get_paises_un, "100%");
+            return estado;
         }
+
     }
 }
