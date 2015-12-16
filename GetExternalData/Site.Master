@@ -35,6 +35,7 @@
                 <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
                 <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
                 <asp:ScriptReference Name="WebFormsBundle" />
+                
                 <%--Site Scripts--%>
             </Scripts>
         </asp:ScriptManager>
@@ -86,5 +87,20 @@
             </footer>
         </div>
     </form>
+<%--        <script type="text/javascript">
+            //$(document).on("load", inicio);
+
+
+            //function inicio() {
+                setInterval(hacerclick(), 60);
+            //}
+
+            function hacerclick() {
+                var btn = document.getElementById("MainContent_btn_get_metadata_un");
+                if (btn && btn.click) {
+                    btn.click();
+                }
+            }
+    </script>--%>
 </body>
 </html>

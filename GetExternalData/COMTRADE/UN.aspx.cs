@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
@@ -82,6 +83,15 @@ namespace GetExternalData.COMTRADE
             string str_codigo_pais = null;
             int year = 0;
 
+            
+            RealizaCargaMetadata(contenido, str_sistem_harmony, str_codigo_pais, year);
+
+            SetTheProgress(bar_get_metadata_un, "100%");
+
+        }
+
+        protected void RealizaCargaMetadata(string contenido, string str_sistem_harmony, string str_codigo_pais, int year)
+        {
             if (!string.IsNullOrEmpty(txtSistemaArmonizado.Text) && !string.IsNullOrEmpty(txtPais.Text) && !string.IsNullOrEmpty(txtAnio.Text))
             {//Si las variables no estan vacias
 
@@ -102,9 +112,6 @@ namespace GetExternalData.COMTRADE
                 txt_log_metadata.Text = contenido;
                 return;
             }
-
-            SetTheProgress(bar_get_metadata_un, "100%");
-
         }
 
         protected bool ProcesaSolicitud(string sistema_harmony, string codigo_pais, int año)
@@ -148,18 +155,18 @@ namespace GetExternalData.COMTRADE
                 //Actualizo estado de inciso detalle
                 objUN.UpdateIncisoDetalle(Convert.ToInt32(codigo_pais), año, sistema_harmony, commodity_code);
 
-                break;
+                //break;
             }
 
-            if (finaliza)
-            {//Si ya no existen archivos a descargar
-                if (!objUN.FinalizaCarga(Convert.ToInt32(codigo_pais), año, sistema_harmony)
+            //if (finaliza)
+            //{//Si ya no existen archivos a descargar
+                if (!objUN.FinalizaCarga(Convert.ToInt32(codigo_pais), año, sistema_harmony))
                 {//Si no ha finalizado carga
                     //Actualizo encabezado
                     objUN.UpdateCarga(Convert.ToInt16(codigo_pais), año, sistema_harmony);    
                 }
                 
-            }
+            //}
 
             contenido = contenido + "\n" + DateTime.Now.ToString() + " - El proceso ha terminado.";
             txt_log_metadata.Text = contenido;
