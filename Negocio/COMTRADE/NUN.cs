@@ -17,16 +17,34 @@ namespace Negocio.COMTRADE
             return objUN.SaveCommodity(commodities_list);
         }
 
+        //Funcion que obtiene cantidad de incisos
+        public int CantidadCommodity()
+        {
+            return objUN.CantidadCommodity();
+        }
+
         //Funcion que almacena los paises de la COMTRADE
         public bool SaveCountry(DataSet countries_list)
         {
             return objUN.SaveCountry(countries_list);
         }
 
+        //Funcion que obtiene cantidad de paises descargdos
+        public int CantidadPaises()
+        {
+            return objUN.CantidadPaises();
+        }
+
         //Funcion que obtiene listado de codigos de incisos de la data de la comtrade
         public DataTable IncisosPendientesList(string sistem_harmony_type, int codigo_pais, int anio_carga)
         {
             return objUN.IncisosPendientesList(sistem_harmony_type, codigo_pais, anio_carga);
+        }
+
+        //Funcion que obtiene la cantidad de registros en la metadata
+        public int CantidadMetaData()
+        {
+            return objUN.CantidadMetaData();
         }
 
         //Funcion que almacena la metadata de la COMTRADE

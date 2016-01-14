@@ -55,7 +55,7 @@ namespace GetExternalData.COMTRADE
         {
             string codigo_pais = null;
 
-            for (int i = 0; i < gvEncBitacora.Rows.Count - 1; i++)
+            for (int i = 0; i < gvEncBitacora.Rows.Count; i++)
             {
 
                 RadioButton rb_check = gvEncBitacora.Rows[i].FindControl("rb_registro") as RadioButton;
@@ -78,7 +78,7 @@ namespace GetExternalData.COMTRADE
         {
             int anio = 0;
 
-            for (int i = 0; i < gvEncBitacora.Rows.Count - 1; i++)
+            for (int i = 0; i < gvEncBitacora.Rows.Count; i++)
             {
 
                 RadioButton rb_check = gvEncBitacora.Rows[i].FindControl("rb_registro") as RadioButton;
@@ -102,7 +102,7 @@ namespace GetExternalData.COMTRADE
         {
             string codigo_hs = null;
 
-            for (int i = 0; i < gvEncBitacora.Rows.Count - 1; i++)
+            for (int i = 0; i < gvEncBitacora.Rows.Count ; i++)
             {
 
                 RadioButton rb_check = gvEncBitacora.Rows[i].FindControl("rb_registro") as RadioButton;

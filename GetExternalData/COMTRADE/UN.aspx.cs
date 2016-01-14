@@ -18,7 +18,12 @@ namespace GetExternalData.COMTRADE
 
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            if (!IsPostBack)
+            {
+                lbl_cant_paises.Text = objUN.CantidadPaises().ToString();
+                lbl_cant_commodities.Text = objUN.CantidadCommodity().ToString();
+                lbl_cant_metadata.Text = objUN.CantidadMetaData().ToString();
+            }   
         }
 
         void SetTheProgress(HtmlGenericControl bar, string value)
@@ -39,7 +44,7 @@ namespace GetExternalData.COMTRADE
             {
                 string str_hs = txtHs.Text;
 
-                string filename = "C:/Getdata/UN/getCommodity_"+str_hs+"_" + Convert.ToString(DateTime.Today.Year) + "_" + Convert.ToString(DateTime.Today.Month) + "_" + Convert.ToString(DateTime.Today.Day) + ".xml";
+                string filename = "C:/Getdata/UN/getCommodity_"+str_hs+"_" + Convert.ToString(DateTime.Today.Year) + "_" + Convert.ToString(DateTime.Today.Month) + ".xml";
                 string url = @"http://comtrade.un.org/ws/refs/getCommodityList.aspx?px="+str_hs;
                 contenido = DateTime.Today.ToString() + " - Verificando si el archivo " + filename + " ya ha sido cargado.";
 
@@ -60,7 +65,7 @@ namespace GetExternalData.COMTRADE
             //Verifica si archivo ya ha sido descargado hoy
             string contenido = null;
 
-            string filename = "C:/Getdata/UN/getCountries_" + Convert.ToString(DateTime.Today.Year) + "_" + Convert.ToString(DateTime.Today.Month) + "_" + Convert.ToString(DateTime.Today.Day) + ".xml";
+            string filename = "C:/Getdata/UN/getCountries_" + Convert.ToString(DateTime.Today.Year) + "_" + Convert.ToString(DateTime.Today.Month) + ".xml";
             string url = @"http://comtrade.un.org/ws/refs/getCountryList.aspx";
             contenido = DateTime.Now.ToString() + " - Verificando si el archivo " + filename + " ya ha sido cargado.";
 

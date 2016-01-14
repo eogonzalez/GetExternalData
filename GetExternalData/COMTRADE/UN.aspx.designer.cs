@@ -22,6 +22,15 @@ namespace GetExternalData.COMTRADE {
         protected global::System.Web.UI.WebControls.Panel pnlGetCommodity;
         
         /// <summary>
+        /// Control lbl_cant_commodities.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbl_cant_commodities;
+        
+        /// <summary>
         /// Control btnGetCommodity.
         /// </summary>
         /// <remarks>
@@ -76,6 +85,15 @@ namespace GetExternalData.COMTRADE {
         protected global::System.Web.UI.WebControls.Panel pnlGetPaises;
         
         /// <summary>
+        /// Control lbl_cant_paises.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbl_cant_paises;
+        
+        /// <summary>
         /// Control btn_get_paises_un.
         /// </summary>
         /// <remarks>
@@ -110,6 +128,15 @@ namespace GetExternalData.COMTRADE {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlMetaData;
+        
+        /// <summary>
+        /// Control lbl_cant_metadata.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbl_cant_metadata;
         
         /// <summary>
         /// Control lbl_codigo_pais.

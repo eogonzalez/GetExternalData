@@ -3,7 +3,12 @@
         <br />
     <asp:Panel ID="pnlGetCommodity" CssClass="panel panel-primary" runat="server">
 
-        <div class="panel-heading">Obtener Productos</div>
+        <div class="panel-heading">Obtener Productos
+            <span class="badge">
+                Cantidad de Registros del SAC:
+                <asp:Label id="lbl_cant_commodities" runat="server"></asp:Label>
+            </span>
+        </div>
 
         <div class="panel-body form-vertical">
             <div>
@@ -35,7 +40,12 @@
     <br />
     <asp:Panel ID="pnlGetPaises" CssClass="panel panel-primary" runat="server">
 
-        <div class="panel-heading">Obtener Paises</div>
+        <div class="panel-heading">Obtener Paises
+            <span class="badge">
+                Cantidad de Paises: 
+                <asp:Label ID="lbl_cant_paises" runat="server"></asp:Label>
+            </span>
+        </div>
 
         <div class="panel-body form-horizontal">
             <div>
@@ -60,7 +70,12 @@
     <br />
     <asp:Panel ID="pnlMetaData" CssClass="panel panel-primary" runat="server">
 
-        <div class="panel-heading">Obtener MetaData</div>
+        <div class="panel-heading">Obtener MetaData
+            <span class="badge">
+                Cantidad de Registros:
+                <asp:Label ID="lbl_cant_metadata" runat="server"></asp:Label>
+            </span>
+        </div>
 
         <div class="panel-body form-horizontal">
             

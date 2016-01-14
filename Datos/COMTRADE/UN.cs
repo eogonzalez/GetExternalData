@@ -23,29 +23,33 @@ namespace Datos.COMTRADE
 
                 foreach (DataRow row_comodity in dt_commodity.Rows)
                 {
-                    //Query para insertar en la tabla country
-                    sql_query = " INSERT INTO Commodities " +
-                        " (code, descE, isBasicCode, level, parentCode, class)" +
-                        " VALUES " +
-                        " (@code, @descE, @isBasicCode, @level, @parentCode, @class) ";
 
-                    using (var conexion = objConectar.Conectar("un"))
+                    if (!ExisteCommodity(row_comodity))
                     {
-                        var command = new SqlCommand(sql_query, conexion);
-                        command.Parameters.AddWithValue("code", row_comodity["code"]);
-                        command.Parameters.AddWithValue("descE", row_comodity["descE"]);
-                        command.Parameters.AddWithValue("isBasicCode", row_comodity["isBasicCode"]);
-                        command.Parameters.AddWithValue("level", row_comodity["level"]);
-                        command.Parameters.AddWithValue("parentCode", row_comodity["parentCode"]);
-                        command.Parameters.AddWithValue("class", row_comodity["class"]);
-                        conexion.Open();
-                        if (command.ExecuteNonQuery() > 0)
+                        //Query para insertar en la tabla country
+                        sql_query = " INSERT INTO Commodities " +
+                            " (code, descE, isBasicCode, level, parentCode, class)" +
+                            " VALUES " +
+                            " (@code, @descE, @isBasicCode, @level, @parentCode, @class) ";
+
+                        using (var conexion = objConectar.Conectar("un"))
                         {
-                            estado = true;
-                        }
-                        else
-                        {
-                            estado = false;
+                            var command = new SqlCommand(sql_query, conexion);
+                            command.Parameters.AddWithValue("code", row_comodity["code"]);
+                            command.Parameters.AddWithValue("descE", row_comodity["descE"]);
+                            command.Parameters.AddWithValue("isBasicCode", row_comodity["isBasicCode"]);
+                            command.Parameters.AddWithValue("level", row_comodity["level"]);
+                            command.Parameters.AddWithValue("parentCode", row_comodity["parentCode"]);
+                            command.Parameters.AddWithValue("class", row_comodity["class"]);
+                            conexion.Open();
+                            if (command.ExecuteNonQuery() > 0)
+                            {
+                                estado = true;
+                            }
+                            else
+                            {
+                                estado = false;
+                            }
                         }
                     }
                 }
@@ -53,6 +57,124 @@ namespace Datos.COMTRADE
             catch (Exception)
             {
                 estado = false;
+                throw;
+            }
+            return estado;
+        }
+
+        //Funcion que verifica si existe registro de inciso SAC
+        bool ExisteCommodity(DataRow row_commodity)
+        {
+            bool estado = true;
+            string sql_query = null;
+            try
+            {
+                sql_query = " SELECT "+
+                    " COALESCE(COUNT(*), 0) "+
+                    " FROM "+
+                    " Commodities "+
+                    " where "+
+                    " code = @code and "+
+                    " class = @class ";
+
+                using (var conexion = objConectar.Conectar("un"))
+                {
+                    var command = new SqlCommand(sql_query, conexion);
+                    command.Parameters.AddWithValue("code", row_commodity["code"]);
+                    command.Parameters.AddWithValue("class", row_commodity["class"]);
+
+                    conexion.Open();
+                    int result = int.Parse(command.ExecuteScalar().ToString());
+
+                    if (result > 0)
+                    {
+                        estado = true;
+                    }
+                    else
+                    {
+                        estado = false;
+                    }
+
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return estado;
+        }
+
+        //Funcion que obtiene cantidad de incisos
+        public int CantidadCommodity()
+        {
+            int cantidad_commodities = 0;
+            string sql_query = null;
+
+            try
+            {
+                sql_query = " SELECT " +
+                    " count(*) cant_commodity " +
+                    " FROM " +
+                    " Commodities ";
+                    
+                using (var con = objConectar.Conectar("un"))
+                {
+                    var command = new SqlCommand(sql_query, con);
+                   
+                    con.Open();
+                    cantidad_commodities = int.Parse(command.ExecuteScalar().ToString());
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+            return cantidad_commodities;
+        }
+
+        //Funcion que verifica si existe pais
+        bool ExisteCountry(DataRow row_country)
+        {
+            bool estado = true;
+            string sql_query = null;
+            try
+            {
+                sql_query = " SELECT "+
+                    " COALESCE(count(*), 0) "+
+                    " FROM "+
+                    " Countries "+
+                    " where "+
+                    " code = @code ";
+
+                using (var conexion = objConectar.Conectar("un"))
+                {
+                    var command = new SqlCommand(sql_query, conexion);
+                    command.Parameters.AddWithValue("code", row_country["code"]);
+                    
+                    conexion.Open();
+                    int result = int.Parse(command.ExecuteScalar().ToString());
+
+                    if (result > 0)
+                    {
+                        estado = true;
+                    }
+                    else
+                    {
+                        estado = false;
+                    }
+
+                }
+            }
+            catch (Exception)
+            {
+
                 throw;
             }
             return estado;
@@ -69,31 +191,38 @@ namespace Datos.COMTRADE
 
                 foreach (DataRow row_country in dt_country.Rows)
                 {
-                    //Query para insertar en la tabla country
-                    sql_query = " INSERT INTO Countries " +
-                        " (code, name, iso2, iso3)" +
-                        " VALUES " +
-                        " (@code, @name, @iso2, @iso3) ";
+                    if (!ExisteCountry(row_country))
+                    {//Si no existe pais
+                        //Query para insertar en la tabla country
+                        sql_query = " INSERT INTO Countries " +
+                            " (code, name, iso2, iso3)" +
+                            " VALUES " +
+                            " (@code, @name, @iso2, @iso3) ";
 
-                    using (var conexion = objConectar.Conectar("un"))
-                    {
-                        var command = new SqlCommand(sql_query, conexion);
-                        command.Parameters.AddWithValue("code", row_country["code"]);
-                        command.Parameters.AddWithValue("name", row_country["name"]);
-                        command.Parameters.AddWithValue("iso2", row_country["iso2"]);
-                        command.Parameters.AddWithValue("iso3", row_country["iso3"]);
-                        
-                        conexion.Open();
-                        if (command.ExecuteNonQuery() > 0)
+                        using (var conexion = objConectar.Conectar("un"))
                         {
-                            estado = true;
-                        }
-                        else
-                        {
-                            estado = false;
+                            var command = new SqlCommand(sql_query, conexion);
+                            command.Parameters.AddWithValue("code", row_country["code"]);
+                            command.Parameters.AddWithValue("name", row_country["name"]);
+                            command.Parameters.AddWithValue("iso2", row_country["iso2"]);
+                            command.Parameters.AddWithValue("iso3", row_country["iso3"]);
+
+                            conexion.Open();
+                            if (command.ExecuteNonQuery() > 0)
+                            {
+                                estado = true;
+                            }
+                            else
+                            {
+                                estado = false;
+                            }
                         }
                     }
                 }
+            }
+            catch (SqlException)
+            {
+                throw;
             }
             catch (Exception)
             {
@@ -101,6 +230,39 @@ namespace Datos.COMTRADE
                 throw;
             }
             return estado;
+        }
+
+        //Funcion que obtiene cantidad de paises descargdos
+        public int CantidadPaises()
+        {
+            int cantidad_paises = 0;
+            string sql_query = null;
+
+            try
+            {
+                sql_query = " SELECT "+
+                    " count(*) cant_paises "+
+                    " FROM "+
+                    " Countries ";
+
+                using (var con = objConectar.Conectar("un"))
+                {
+                    var command = new SqlCommand(sql_query, con);
+                    con.Open();
+                    cantidad_paises = int.Parse(command.ExecuteScalar().ToString());
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
+
+            return cantidad_paises;
         }
 
         //Funcion que obtiene listado de codigos de incisos de la data de la comtrade
@@ -157,6 +319,7 @@ namespace Datos.COMTRADE
             return incisos_list;
         }
 
+        //Funcion que verifica si existe registro de metadata
         bool ExisteMetadata(DataRow row_metadata)
         {
             bool estado = true;
@@ -203,6 +366,40 @@ namespace Datos.COMTRADE
                 throw;
             }
             return estado;
+        }
+
+        //Funcion que obtiene la cantidad de registros en la metadata
+        public int CantidadMetaData()
+        {
+            int cantidad_metadata = 0;
+            string sql_query = null;
+
+            try
+            {
+                sql_query = " SELECT " +
+                    " count(*) cant_metadata " +
+                    " FROM " +
+                    " MetaData ";
+
+                using (var con = objConectar.Conectar("un"))
+                {
+                    var command = new SqlCommand(sql_query, con);
+
+                    con.Open();
+                    cantidad_metadata = int.Parse(command.ExecuteScalar().ToString());
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+            return cantidad_metadata;
         }
 
         //Funcion que almacena la metadata de la COMTRADE
