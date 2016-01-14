@@ -154,6 +154,8 @@
     <Content Include="Account\RegisterExternalLogin.aspx" />
     <Content Include="BM\BM.aspx" />
     <Content Include="CEPALStat\CEPALStat.aspx" />
+    <Content Include="COMTRADE\BitacoraDetUN.aspx" />
+    <Content Include="COMTRADE\BitacoraUN.aspx" />
     <Content Include="COMTRADE\UN.aspx" />
     <Content Include="Contact.aspx" />
     <Content Include="Content\bootstrap.css" />
@@ -273,6 +275,20 @@
     </Compile>
     <Compile Include="CEPALStat\CEPALStat.aspx.designer.cs">
       <DependentUpon>CEPALStat.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="COMTRADE\BitacoraDetUN.aspx.cs">
+      <DependentUpon>BitacoraDetUN.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="COMTRADE\BitacoraDetUN.aspx.designer.cs">
+      <DependentUpon>BitacoraDetUN.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="COMTRADE\BitacoraUN.aspx.cs">
+      <DependentUpon>BitacoraUN.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="COMTRADE\BitacoraUN.aspx.designer.cs">
+      <DependentUpon>BitacoraUN.aspx</DependentUpon>
     </Compile>
     <Compile Include="COMTRADE\UN.aspx.cs">
       <DependentUpon>UN.aspx</DependentUpon>

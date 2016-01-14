@@ -57,7 +57,14 @@
                         <%--<li><a runat="server" href="~/Contact">Contacto</a></li>--%>
                         <li><a href="/CEPALStat/CEPALStat.aspx">CEPALStat</a></li>
                         <li><a href="/BM/BM.aspx">Banco Mundial</a></li>
-                        <li><a href="/COMTRADE/UN.aspx">UN COMTRADE</a></li>
+                        <li class="dropdown">
+                            <a class="dropdown-toogle" data-toggle="dropdown" href="#">UN COMTRADE
+                            <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/COMTRADE/UN.aspx">Descarga de Datos</a></li>
+                                <li><a href="/COMTRADE/BitacoraUN.aspx">Bitacora descargas</a></li>
+                            </ul>
+                        </li>
                     </ul>
                     <asp:LoginView runat="server" ViewStateMode="Disabled">
                         <AnonymousTemplate>

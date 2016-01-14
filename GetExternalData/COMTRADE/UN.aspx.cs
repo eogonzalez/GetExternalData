@@ -155,18 +155,17 @@ namespace GetExternalData.COMTRADE
                 //Actualizo estado de inciso detalle
                 objUN.UpdateIncisoDetalle(Convert.ToInt32(codigo_pais), año, sistema_harmony, commodity_code);
 
-                //break;
+                break;
             }
 
-            //if (finaliza)
-            //{//Si ya no existen archivos a descargar
+            if (finaliza)
+            {//Si ya no existen archivos a descargar
                 if (!objUN.FinalizaCarga(Convert.ToInt32(codigo_pais), año, sistema_harmony))
                 {//Si no ha finalizado carga
                     //Actualizo encabezado
                     objUN.UpdateCarga(Convert.ToInt16(codigo_pais), año, sistema_harmony);    
                 }
-                
-            //}
+            }
 
             contenido = contenido + "\n" + DateTime.Now.ToString() + " - El proceso ha terminado.";
             txt_log_metadata.Text = contenido;

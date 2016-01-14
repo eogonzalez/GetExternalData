@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="BM\BM.cs" />
     <Compile Include="CEPALStat\CEPALStat.cs" />
+    <Compile Include="COMTRADE\CD_BitacoraUN.cs" />
     <Compile Include="COMTRADE\UN.cs" />
     <Compile Include="General\ConectarService.cs" />
     <Compile Include="General\General.cs" />
