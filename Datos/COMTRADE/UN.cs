@@ -40,7 +40,7 @@ namespace Datos.COMTRADE
                             command.Parameters.AddWithValue("isBasicCode", row_comodity["isBasicCode"]);
                             command.Parameters.AddWithValue("level", row_comodity["level"]);
                             command.Parameters.AddWithValue("parentCode", row_comodity["parentCode"]);
-                            command.Parameters.AddWithValue("class", row_comodity["class"]);
+                            command.Parameters.AddWithValue("class", row_comodity["HS"]);
                             conexion.Open();
                             if (command.ExecuteNonQuery() > 0)
                             {
@@ -840,5 +840,74 @@ namespace Datos.COMTRADE
 
             return estado;
         }
+
+        //Funcion que obtiene listado de paises
+        public DataTable SelectPaises()
+        {
+            var dt_paises = new DataTable();
+            string sql_query = null;
+            try
+            {
+                sql_query = " SELECT "+
+                    " code, name "+
+                    " FROM "+
+                    " Countries "+
+                    "order by name ";
+
+                using (var con = objConectar.Conectar("un"))
+                {
+                    var command = new SqlCommand(sql_query, con);
+                    var dataAdapter = new SqlDataAdapter(command);
+
+                    dataAdapter.Fill(dt_paises);
+                    con.Close();
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
+            return dt_paises;
+        }
+
+        //Funcion que obtiene listado de HS existentes en la data
+        public DataTable SelectHSClass()
+        {
+            var dt_hsClass = new DataTable();
+            string sql_query = null;
+            try
+            {
+                sql_query = " SELECT "+
+                    " class "+
+                    " FROM "+
+                    " Commodities "+
+                    " group by class ";
+
+                using (var con = objConectar.Conectar("un"))
+                {
+                    var command = new SqlCommand(sql_query, con);
+                    var dataAdapter = new SqlDataAdapter(command);
+
+                    dataAdapter.Fill(dt_hsClass);
+                    con.Close();
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return dt_hsClass;
+        }
+
     }
 }

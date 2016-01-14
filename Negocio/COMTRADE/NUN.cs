@@ -94,5 +94,17 @@ namespace Negocio.COMTRADE
         {
             return objUN.FinalizaCarga(codigo_pais, anio_carga, codigo_sh);
         }
+
+        //Funcion que obtiene listado de paises
+        public DataTable SelectPaises()
+        {
+            return objUN.SelectPaises();
+        }
+
+        //Funcion que obtiene listado de HS existentes en la data
+        public DataTable SelectHSClass()
+        {
+            return objUN.SelectHSClass();
+        }
     }
 }

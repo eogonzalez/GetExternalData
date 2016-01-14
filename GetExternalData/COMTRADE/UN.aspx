@@ -10,25 +10,40 @@
             </span>
         </div>
 
-        <div class="panel-body form-vertical">
-            <div>
-                <asp:Button ID="btnGetCommodity" CssClass="btn btn-primary" runat="server" Text="Obtener Productos" OnClick="btnGetCommodity_Click"/>
-            </div>
+        <div class="panel-body form-horizontal">
+
             <br />
             <div class="form-group">
-                <asp:Label ID="Label1" CssClass="control-label col-xs-2" runat="server" Text="Version HS(Harmony System):"></asp:Label>
+                <asp:Label ID="Label4" CssClass="control-label col-xs-2" runat="server" Text="Version Sistema Armonizado:"></asp:Label>
                 <div class="col-xs-4">
-                    <asp:TextBox ID="txtHs" type="text" CssClass="form-control" runat="server"></asp:TextBox>
+                    <asp:DropDownList ID="ddl_hs" CssClass="form-control" runat="server">
+                        <asp:ListItem Value="H0">H0 - HS1988</asp:ListItem>
+                        <asp:ListItem Value="H1">H1 - HS1996</asp:ListItem>
+                        <asp:ListItem Value="H2">H2 - HS2002</asp:ListItem>
+                        <asp:ListItem Value="H3">H3 - HS2007</asp:ListItem>
+                        <asp:ListItem Value="H4">H4 - HS2012</asp:ListItem>
+                    </asp:DropDownList>
                 </div>
             </div>
+
+            <div class="form-group col-xs-2">
+                <asp:Button ID="btnGetCommodity" CssClass="btn btn-primary" runat="server" Text="Obtener Productos" OnClick="btnGetCommodity_Click"/>
+            </div>
+
+        </div>
+
+        <div class="panel-body form-vertical">
             <br />
             <span>Progreso</span>
-            <div class="progress progress-striped">
-                <div class="progress-bar progress-bar-success" role="progressbar"
-                    aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
-                    id="bar_UN_Commodity" runat="server">
+            <div class="form-group">
+                <div class="progress progress-striped">
+                    <div class="progress-bar progress-bar-success" role="progressbar"
+                        aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+                        id="bar_UN_Commodity" runat="server">
+                    </div>
                 </div>
             </div>
+
             <br />
             <span>Bitacora:</span>
             <div>
@@ -79,25 +94,29 @@
 
         <div class="panel-body form-horizontal">
             
+            <div class="form-group">
+                <asp:Label ID="Label6" CssClass="control-label col-xs-2" runat="server" Text="Seleccione Pais:"></asp:Label>
+                <div class="col-xs-4">
+                    <asp:DropDownList ID="ddl_paisMetaData" CssClass="form-control" runat="server">
+                    </asp:DropDownList>
+                </div>
+            </div>
 
             <div class="form-group">
-                <asp:Label ID="lbl_codigo_pais" CssClass="control-label col-xs-2" runat="server" Text="Codigo Pais:"></asp:Label>
+                <asp:Label ID="Label5" CssClass="control-label col-xs-2" runat="server" Text="Seleccione Version Sistema Armonizado:"></asp:Label>
                 <div class="col-xs-4">
-                    <asp:TextBox ID="txtPais" type="text" CssClass="form-control" runat="server"></asp:TextBox>
+                    <asp:DropDownList ID="ddl_hsMetaData" CssClass="form-control" runat="server">
+                    </asp:DropDownList>
                 </div>
             </div>
-            <div class="form-group">
-                <asp:Label ID="Label2" CssClass="control-label col-xs-2" runat="server" Text="Codigo Sistema Armonizado:"></asp:Label>
-                <div class="col-xs-4">
-                    <asp:TextBox ID="txtSistemaArmonizado" type="text" CssClass="form-control" runat="server"></asp:TextBox>
-                </div>
-            </div>
+
             <div class="form-group">
                 <asp:Label ID="Label3" CssClass="control-label col-xs-2" runat="server" Text="Año:"></asp:Label>
                 <div class="col-xs-4">
                     <asp:TextBox ID="txtAnio" type="text" CssClass="form-control" runat="server"></asp:TextBox>
                 </div>
             </div>
+
             <%--<div class="form-group">
                 <asp:Label ID  ="lbl" CssClass="control-label col-xs-2" runat="server" Text="Del anio: "></asp:Label>
                 <div class="col-xs-4">

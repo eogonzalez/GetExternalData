@@ -31,6 +31,24 @@ namespace GetExternalData.COMTRADE {
         protected global::System.Web.UI.WebControls.Label lbl_cant_commodities;
         
         /// <summary>
+        /// Control Label4.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label4;
+        
+        /// <summary>
+        /// Control ddl_hs.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddl_hs;
+        
+        /// <summary>
         /// Control btnGetCommodity.
         /// </summary>
         /// <remarks>
@@ -38,24 +56,6 @@ namespace GetExternalData.COMTRADE {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnGetCommodity;
-        
-        /// <summary>
-        /// Control Label1.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label1;
-        
-        /// <summary>
-        /// Control txtHs.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtHs;
         
         /// <summary>
         /// Control bar_UN_Commodity.
@@ -139,40 +139,40 @@ namespace GetExternalData.COMTRADE {
         protected global::System.Web.UI.WebControls.Label lbl_cant_metadata;
         
         /// <summary>
-        /// Control lbl_codigo_pais.
+        /// Control Label6.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbl_codigo_pais;
+        protected global::System.Web.UI.WebControls.Label Label6;
         
         /// <summary>
-        /// Control txtPais.
+        /// Control ddl_paisMetaData.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPais;
+        protected global::System.Web.UI.WebControls.DropDownList ddl_paisMetaData;
         
         /// <summary>
-        /// Control Label2.
+        /// Control Label5.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label2;
+        protected global::System.Web.UI.WebControls.Label Label5;
         
         /// <summary>
-        /// Control txtSistemaArmonizado.
+        /// Control ddl_hsMetaData.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtSistemaArmonizado;
+        protected global::System.Web.UI.WebControls.DropDownList ddl_hsMetaData;
         
         /// <summary>
         /// Control Label3.

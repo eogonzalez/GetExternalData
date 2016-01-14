@@ -20,9 +20,10 @@ namespace GetExternalData.COMTRADE
         {
             if (!IsPostBack)
             {
-                lbl_cant_paises.Text = objUN.CantidadPaises().ToString();
-                lbl_cant_commodities.Text = objUN.CantidadCommodity().ToString();
-                lbl_cant_metadata.Text = objUN.CantidadMetaData().ToString();
+
+                ActualizarContadores();
+                LlenarComboPaisMetaData();
+                LlenarComboHSClass();
             }   
         }
 
@@ -36,13 +37,14 @@ namespace GetExternalData.COMTRADE
             SetTheProgress(bar_UN_Commodity, "5%");
             //Verifica si archivo ya ha sido descargado hoy
             string contenido = null;
-            if (string.IsNullOrEmpty(txtHs.Text))
+            if (string.IsNullOrEmpty(ddl_hs.SelectedValue))
             {
                 return;
             }
             else
             {
-                string str_hs = txtHs.Text;
+                string str_hs = ddl_hs.SelectedValue;
+                Session.Add("str_hs", str_hs);
 
                 string filename = "C:/Getdata/UN/getCommodity_"+str_hs+"_" + Convert.ToString(DateTime.Today.Year) + "_" + Convert.ToString(DateTime.Today.Month) + ".xml";
                 string url = @"http://comtrade.un.org/ws/refs/getCommodityList.aspx?px="+str_hs;
@@ -51,6 +53,8 @@ namespace GetExternalData.COMTRADE
                 txt_log_Commodity.Text = contenido;
 
                 ManageFile(filename, url, "SAC", txt_log_Commodity);
+
+                ActualizarContadores();
 
                 contenido = contenido + "\n" + DateTime.Now.ToString() + " - La estructura del archivo ha sido almacenado en la Base de Datos.";
                 txt_log_Commodity.Text = contenido;
@@ -72,6 +76,7 @@ namespace GetExternalData.COMTRADE
             txt_log_paises_un.Text = contenido;
 
             ManageFile(filename, url, "PAISES", txt_log_paises_un);
+            ActualizarContadores();
 
             contenido = contenido + "\n" + DateTime.Now.ToString() + " - La estructura del archivo ha sido almacenado en la Base de Datos.";
             txt_log_paises_un.Text = contenido;
@@ -90,6 +95,7 @@ namespace GetExternalData.COMTRADE
 
             
             RealizaCargaMetadata(contenido, str_sistem_harmony, str_codigo_pais, year);
+            ActualizarContadores();
 
             SetTheProgress(bar_get_metadata_un, "100%");
 
@@ -97,11 +103,11 @@ namespace GetExternalData.COMTRADE
 
         protected void RealizaCargaMetadata(string contenido, string str_sistem_harmony, string str_codigo_pais, int year)
         {
-            if (!string.IsNullOrEmpty(txtSistemaArmonizado.Text) && !string.IsNullOrEmpty(txtPais.Text) && !string.IsNullOrEmpty(txtAnio.Text))
+            if (!string.IsNullOrEmpty(ddl_hsMetaData.SelectedValue) && !string.IsNullOrEmpty(ddl_paisMetaData.SelectedValue) && !string.IsNullOrEmpty(txtAnio.Text))
             {//Si las variables no estan vacias
 
-                str_sistem_harmony = txtSistemaArmonizado.Text;
-                str_codigo_pais = txtPais.Text;
+                str_sistem_harmony = ddl_hsMetaData.SelectedValue;
+                str_codigo_pais = ddl_paisMetaData.SelectedValue;
                 year = Convert.ToInt32(txtAnio.Text);
 
                 if (!objUN.ExisteCarga(Convert.ToInt32(str_codigo_pais), year, str_sistem_harmony))
@@ -243,6 +249,11 @@ namespace GetExternalData.COMTRADE
                     }
                     else if (dimension == "SAC")
                     {
+                        var newColumn = new System.Data.DataColumn("HS", typeof(System.String));
+
+                        newColumn.DefaultValue = Session["str_hs"].ToString();
+                        metadata_list.Tables[0].Columns.Add(newColumn);
+
                         estado = objUN.SaveCommodity(metadata_list);
                     }
                     else
@@ -255,6 +266,33 @@ namespace GetExternalData.COMTRADE
             }
 
             return estado;
+        }
+
+        protected void LlenarComboPaisMetaData()
+        {
+            var dt_paises = objUN.SelectPaises();
+
+            ddl_paisMetaData.DataSource = dt_paises;
+            ddl_paisMetaData.DataTextField = "name";
+            ddl_paisMetaData.DataValueField = "code";
+            ddl_paisMetaData.DataBind();
+        }
+
+        protected void LlenarComboHSClass()
+        {
+            var dt_hsClass = objUN.SelectHSClass();
+
+            ddl_hsMetaData.DataSource = dt_hsClass;
+            ddl_hsMetaData.DataTextField = "class";
+            ddl_hsMetaData.DataValueField = "class";
+            ddl_hsMetaData.DataBind();
+        }
+
+        protected void ActualizarContadores()
+        {
+            lbl_cant_paises.Text = objUN.CantidadPaises().ToString();
+            lbl_cant_commodities.Text = objUN.CantidadCommodity().ToString();
+            lbl_cant_metadata.Text = objUN.CantidadMetaData().ToString();
         }
 
     }
