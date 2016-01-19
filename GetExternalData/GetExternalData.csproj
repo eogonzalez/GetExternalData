@@ -156,6 +156,8 @@
     <Content Include="CEPALStat\CEPALStat.aspx" />
     <Content Include="COMTRADE\BitacoraDetUN.aspx" />
     <Content Include="COMTRADE\BitacoraUN.aspx" />
+    <Content Include="COMTRADE\CommoditiesUN.aspx" />
+    <Content Include="COMTRADE\PaisesUN.aspx" />
     <Content Include="COMTRADE\UN.aspx" />
     <Content Include="Contact.aspx" />
     <Content Include="Content\bootstrap.css" />
@@ -289,6 +291,20 @@
     </Compile>
     <Compile Include="COMTRADE\BitacoraUN.aspx.designer.cs">
       <DependentUpon>BitacoraUN.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="COMTRADE\CommoditiesUN.aspx.cs">
+      <DependentUpon>CommoditiesUN.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="COMTRADE\CommoditiesUN.aspx.designer.cs">
+      <DependentUpon>CommoditiesUN.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="COMTRADE\PaisesUN.aspx.cs">
+      <DependentUpon>PaisesUN.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="COMTRADE\PaisesUN.aspx.designer.cs">
+      <DependentUpon>PaisesUN.aspx</DependentUpon>
     </Compile>
     <Compile Include="COMTRADE\UN.aspx.cs">
       <DependentUpon>UN.aspx</DependentUpon>

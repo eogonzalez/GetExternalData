@@ -69,7 +69,8 @@ namespace Datos.COMTRADE
                     " FROM [UNDB].[dbo].[Control_carga] cc, " +
                     " Countries coun " +
                     " WHERE " +
-                    " coun.code = cc.codigo_pais ";
+                    " coun.code = cc.codigo_pais "+
+                    " order by cc.estado DESC, cc.fecha_inicio";
 
                 using (var con = objConectar.Conectar("un"))
                 {

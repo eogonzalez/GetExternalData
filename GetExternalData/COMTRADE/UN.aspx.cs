@@ -32,57 +32,6 @@ namespace GetExternalData.COMTRADE
             bar.Attributes.Add("style", string.Format("width:{0};", value));
         }
 
-        protected void btnGetCommodity_Click(object sender, EventArgs e)
-        {          
-            SetTheProgress(bar_UN_Commodity, "5%");
-            //Verifica si archivo ya ha sido descargado hoy
-            string contenido = null;
-            if (string.IsNullOrEmpty(ddl_hs.SelectedValue))
-            {
-                return;
-            }
-            else
-            {
-                string str_hs = ddl_hs.SelectedValue;
-                Session.Add("str_hs", str_hs);
-
-                string filename = "C:/Getdata/UN/getCommodity_"+str_hs+"_" + Convert.ToString(DateTime.Today.Year) + "_" + Convert.ToString(DateTime.Today.Month) + ".xml";
-                string url = @"http://comtrade.un.org/ws/refs/getCommodityList.aspx?px="+str_hs;
-                contenido = DateTime.Today.ToString() + " - Verificando si el archivo " + filename + " ya ha sido cargado.";
-
-                txt_log_Commodity.Text = contenido;
-
-                ManageFile(filename, url, "SAC", txt_log_Commodity);
-
-                ActualizarContadores();
-
-                contenido = contenido + "\n" + DateTime.Now.ToString() + " - La estructura del archivo ha sido almacenado en la Base de Datos.";
-                txt_log_Commodity.Text = contenido;
-
-                SetTheProgress(bar_UN_Commodity, "100%");
-            }
-        }
-
-        protected void btn_get_paises_un_Click(object sender, EventArgs e)
-        {
-            SetTheProgress(bar_get_paises_un, "5%");
-            //Verifica si archivo ya ha sido descargado hoy
-            string contenido = null;
-
-            string filename = "C:/Getdata/UN/getCountries_" + Convert.ToString(DateTime.Today.Year) + "_" + Convert.ToString(DateTime.Today.Month) + ".xml";
-            string url = @"http://comtrade.un.org/ws/refs/getCountryList.aspx";
-            contenido = DateTime.Now.ToString() + " - Verificando si el archivo " + filename + " ya ha sido cargado.";
-
-            txt_log_paises_un.Text = contenido;
-
-            ManageFile(filename, url, "PAISES", txt_log_paises_un);
-            ActualizarContadores();
-
-            contenido = contenido + "\n" + DateTime.Now.ToString() + " - La estructura del archivo ha sido almacenado en la Base de Datos.";
-            txt_log_paises_un.Text = contenido;
-
-            SetTheProgress(bar_get_paises_un, "100%");
-        }
 
         protected void btn_get_metadata_un_Click(object sender, EventArgs e)
         {
@@ -290,8 +239,6 @@ namespace GetExternalData.COMTRADE
 
         protected void ActualizarContadores()
         {
-            lbl_cant_paises.Text = objUN.CantidadPaises().ToString();
-            lbl_cant_commodities.Text = objUN.CantidadCommodity().ToString();
             lbl_cant_metadata.Text = objUN.CantidadMetaData().ToString();
         }
 

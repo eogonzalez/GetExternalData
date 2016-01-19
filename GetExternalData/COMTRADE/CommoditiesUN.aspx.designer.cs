@@ -10,105 +10,69 @@
 namespace GetExternalData.COMTRADE {
     
     
-    public partial class UN {
+    public partial class CommoditiesUN {
         
         /// <summary>
-        /// Control pnlMetaData.
+        /// Control pnlGetCommodity.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlMetaData;
+        protected global::System.Web.UI.WebControls.Panel pnlGetCommodity;
         
         /// <summary>
-        /// Control lbl_cant_metadata.
+        /// Control lbl_cant_commodities.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbl_cant_metadata;
+        protected global::System.Web.UI.WebControls.Label lbl_cant_commodities;
         
         /// <summary>
-        /// Control Label6.
+        /// Control Label4.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label6;
+        protected global::System.Web.UI.WebControls.Label Label4;
         
         /// <summary>
-        /// Control ddl_paisMetaData.
+        /// Control ddl_hs.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddl_paisMetaData;
+        protected global::System.Web.UI.WebControls.DropDownList ddl_hs;
         
         /// <summary>
-        /// Control Label5.
+        /// Control btnGetCommodity.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label5;
+        protected global::System.Web.UI.WebControls.Button btnGetCommodity;
         
         /// <summary>
-        /// Control ddl_hsMetaData.
+        /// Control bar_UN_Commodity.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddl_hsMetaData;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl bar_UN_Commodity;
         
         /// <summary>
-        /// Control Label3.
+        /// Control txt_log_Commodity.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label3;
-        
-        /// <summary>
-        /// Control txtAnio.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtAnio;
-        
-        /// <summary>
-        /// Control btn_get_metadata_un.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btn_get_metadata_un;
-        
-        /// <summary>
-        /// Control bar_get_metadata_un.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl bar_get_metadata_un;
-        
-        /// <summary>
-        /// Control txt_log_metadata.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txt_log_metadata;
+        protected global::System.Web.UI.WebControls.TextBox txt_log_Commodity;
     }
 }

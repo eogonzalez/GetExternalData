@@ -61,6 +61,8 @@
                             <a class="dropdown-toogle" data-toggle="dropdown" href="#">UN COMTRADE
                             <span class="caret"></span></a>
                             <ul class="dropdown-menu">
+                                <li><a href="/COMTRADE/CommoditiesUN.aspx">Descarga Sistema Armonizado</a></li>
+                                <li><a href="/COMTRADE/PaisesUN.aspx">Descarga Paises</a></li>
                                 <li><a href="/COMTRADE/UN.aspx">Descarga de Datos</a></li>
                                 <li><a href="/COMTRADE/BitacoraUN.aspx">Bitacora descargas</a></li>
                             </ul>
