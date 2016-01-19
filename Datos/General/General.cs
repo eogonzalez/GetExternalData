@@ -78,14 +78,14 @@ namespace Datos.General
             {
                 xmlDoc.Save(filename);
             }
-            catch (XmlException)
+            catch (XmlException e)
             {
-                throw;
+                throw e;
             }
-            catch (Exception)
+            catch (Exception e)
             {
 
-                throw;
+                throw e;
             }
 
             return estado;

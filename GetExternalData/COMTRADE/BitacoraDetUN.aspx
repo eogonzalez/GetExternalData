@@ -13,7 +13,7 @@
 
         <div class="panel-heading">Detalle de las Consultas Realizadas
             <span class="badge">
-                Cantidad de Registros:
+                Cantidad de bloques(partidas):
                 <asp:Label ID="lbl_cantidad" runat="server"></asp:Label>
             </span>
         </div>
