@@ -56,7 +56,16 @@
                         <%--<li><a runat="server" href="~/About">Acerca de</a></li>--%>
                         <%--<li><a runat="server" href="~/Contact">Contacto</a></li>--%>
                         <li><a href="/CEPALStat/CEPALStat.aspx">CEPALStat</a></li>
-                        <li><a href="/BM/BM.aspx">Banco Mundial</a></li>
+                        <li class="dropdown">
+                            <a class="dropdown-toogle" data-toggle="dropdown" href="#"> Banco Mundial 
+                                <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/BM/IndicatorsBM.aspx">Descarga de Indicadores</a></li>
+                                <li><a href="/BM/PaisesBM.aspx">Descarga Paises</a></li>
+                                <li><a href="/BM/BM.aspx">Descarga de Datos de Indicadores</a></li>
+                            </ul>
+                        </li>
+                        <%--<li><a href="/BM/BM.aspx">Banco Mundial</a></li>--%>
                         <li class="dropdown">
                             <a class="dropdown-toogle" data-toggle="dropdown" href="#">UN COMTRADE
                             <span class="caret"></span></a>

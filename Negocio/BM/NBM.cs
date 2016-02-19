@@ -13,9 +13,9 @@ namespace Negocio.BM
         Datos.BM.BM objBM = new Datos.BM.BM();
 
         //Funcion que almacena informacion de los indicadores del banco mundial
-        public bool SaveDataIndicators(DataSet indicator_list)
+        public bool SaveDataIndicators(DataSet indicator_list, string idioma)
         {
-            return objBM.SaveDataIndicators(indicator_list);
+            return objBM.SaveDataIndicators(indicator_list, idioma);
         }
 
         //Funcion que obtiene archivo y descoprime
@@ -34,6 +34,42 @@ namespace Negocio.BM
         public bool SaveMetaData(DataSet metadata_list)
         {
             return objBM.SaveMetaData(metadata_list);
+        }
+
+        //Funcion que obtiene cantidad de indicadores
+        public int CantidadIndicadores()
+        {
+            return objBM.CantidadIndicadores();
+        }
+
+        //Funcion que obtiene cantidad de paises
+        public int CantidadPaises()
+        {
+            return objBM.CantidadPaises();
+        }
+
+        //Funcion que obtiene cantidad de metadata
+        public int CantidadMetaData()
+        {
+            return objBM.CantidadMetaData();
+        }
+
+        //Funcion que obtiene listado de paises
+        public DataTable SelectPaises()
+        {
+            return objBM.SelectPaises();
+        }
+
+        //Funcion que obtiene listado de temas
+        public DataTable SelectTemas()
+        {
+            return objBM.SelectTemas();
+        }
+
+        //Funcion que obtiene listado de indicadores por tema
+        public DataTable SelectIndicadores(int id_tema)
+        {
+            return objBM.SelectIndicadores(id_tema);
         }
     }
 }

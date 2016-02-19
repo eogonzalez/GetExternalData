@@ -153,6 +153,8 @@
     <Content Include="Account\Register.aspx" />
     <Content Include="Account\RegisterExternalLogin.aspx" />
     <Content Include="BM\BM.aspx" />
+    <Content Include="BM\IndicatorsBM.aspx" />
+    <Content Include="BM\PaisesBM.aspx" />
     <Content Include="CEPALStat\CEPALStat.aspx" />
     <Content Include="COMTRADE\BitacoraDetUN.aspx" />
     <Content Include="COMTRADE\BitacoraUN.aspx" />
@@ -270,6 +272,20 @@
     </Compile>
     <Compile Include="BM\BM.aspx.designer.cs">
       <DependentUpon>BM.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="BM\IndicatorsBM.aspx.cs">
+      <DependentUpon>IndicatorsBM.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BM\IndicatorsBM.aspx.designer.cs">
+      <DependentUpon>IndicatorsBM.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="BM\PaisesBM.aspx.cs">
+      <DependentUpon>PaisesBM.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BM\PaisesBM.aspx.designer.cs">
+      <DependentUpon>PaisesBM.aspx</DependentUpon>
     </Compile>
     <Compile Include="CEPALStat\CEPALStat.aspx.cs">
       <DependentUpon>CEPALStat.aspx</DependentUpon>

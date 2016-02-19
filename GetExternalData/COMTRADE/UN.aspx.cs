@@ -32,7 +32,6 @@ namespace GetExternalData.COMTRADE
             bar.Attributes.Add("style", string.Format("width:{0};", value));
         }
 
-
         protected void btn_get_metadata_un_Click(object sender, EventArgs e)
         {
             SetTheProgress(bar_get_metadata_un, "5%");

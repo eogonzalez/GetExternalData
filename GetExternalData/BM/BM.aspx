@@ -1,84 +1,41 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="BM.aspx.cs" Inherits="GetExternalData.BM.BM" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-
-    <br />
-    <asp:Panel ID="pnlGetIndicators" CssClass="panel panel-primary" runat="server">
-
-        <div class="panel-heading">Obtener Indicadores</div>
-
-        <div class="panel-body form-vertical">
-            <div>
-                <asp:Button ID="btnGet" CssClass="btn btn-primary" runat="server" Text="Obtener temas" OnClick="btnGet_Click" />
-            </div>
-            <br />
-            <span>Progreso</span>
-            <div class="progress progress-striped">
-                <div class="progress-bar progress-bar-success" role="progressbar"
-                    aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
-                    id="barBMInicators" runat="server">
-                </div>
-            </div>
-            <br />
-            <span>Bitacora:</span>
-            <div>
-                <asp:TextBox ID="txt_log_Indicators" type="text" CssClass="form-control" runat="server" TextMode="MultiLine"></asp:TextBox>
-            </div>
-        </div>
-
-    <%--<div class="panel-footer">
-    </div>--%>
-
-    </asp:Panel>
-
-    <br />
-    <asp:Panel ID="pnlGetPaises" CssClass="panel panel-primary" runat="server">
-
-        <div class="panel-heading">Obtener Paises</div>
-
-        <div class="panel-body form-vertical">
-            <div>
-                <asp:Button ID="btn_get_paises_bm" CssClass="btn btn-primary" runat="server" Text="Obtener Paises" OnClick="btn_get_paises_bm_Click"/>
-            </div>
-            <br />
-            <span>Progreso</span>
-            <div class="progress progress-striped">
-                <div class="progress-bar progress-bar-success" role="progressbar"
-                    aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
-                    id="bar_get_paises_bm" runat="server">
-                </div>
-            </div>
-            <br />
-            <span>Bitacora:</span>
-            <div>
-                <asp:TextBox ID="txt_log_paises_bm" type="text" CssClass="form-control" runat="server" TextMode="MultiLine"></asp:TextBox>
-            </div>
-        </div>
-
-    <%--<div class="panel-footer">
-    </div>--%>
-
-    </asp:Panel>
 
     <br />
     <asp:Panel ID="pnlMetaData" CssClass="panel panel-primary" runat="server">
 
-        <div class="panel-heading">Obtener MetaData</div>
+        <div class="panel-heading">
+            Obtener MetaData de Indicadores
+            <span class="badge">Cantidad de Registros:
+                <asp:Label ID="lbl_cantidad_metadata" runat="server"></asp:Label>
+            </span>
+        </div>
 
         <div class="panel-body form-horizontal">
-            
 
             <div class="form-group">
-                <asp:Label ID="Label1" CssClass="control-label col-xs-2" runat="server" Text="Codigo Pais:"></asp:Label>
+                <asp:Label ID="Label4" CssClass="control-label col-xs-2" runat="server" Text="Seleccione Pais:"></asp:Label>
                 <div class="col-xs-4">
-                    <asp:TextBox ID="txtPais" type="text" CssClass="form-control" runat="server"></asp:TextBox>
+                    <asp:DropDownList ID="ddl_pais" type="text" CssClass="form-control" runat="server"></asp:DropDownList>
                 </div>
             </div>
+
             <div class="form-group">
-                <asp:Label ID="Label2" CssClass="control-label col-xs-2" runat="server" Text="Codigo Indicador:"></asp:Label>
+                <asp:Label ID="Label5" CssClass="control-label col-xs-2" runat="server" Text="Seleccione Tema:"></asp:Label>
                 <div class="col-xs-4">
-                    <asp:TextBox ID="txtIndicador" type="text" CssClass="form-control" runat="server"></asp:TextBox>
+                    <asp:DropDownList ID="ddl_tema"  CssClass="form-control" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddl_tema_SelectedIndexChanged"></asp:DropDownList>
                 </div>
             </div>
+
+            <div class="form-group">
+                <asp:Label ID="Label6" CssClass="control-label col-xs-2" runat="server" Text="Seleccione Indicador:"></asp:Label>
+                <div class="col-xs-4">
+                    <asp:DropDownList ID="ddl_indicador" CssClass="form-control" runat="server"></asp:DropDownList>
+                </div>
+            </div>
+
+
             <div class="form-group">
                 <asp:Label ID="Label3" CssClass="control-label col-xs-2" runat="server" Text="Cantidad de años:"></asp:Label>
                 <div class="col-xs-4">
@@ -86,7 +43,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <asp:Label ID  ="lbl" CssClass="control-label col-xs-2" runat="server" Text="Del anio: "></asp:Label>
+                <asp:Label ID="lbl" CssClass="control-label col-xs-2" runat="server" Text="Del anio: "></asp:Label>
                 <div class="col-xs-4">
                     <asp:TextBox ID="txt_anio_inicial" type="text" CssClass="form-control" runat="server"></asp:TextBox>
                 </div>
@@ -100,7 +57,7 @@
                 <asp:Button ID="btn_get_metadata_bm" CssClass="btn btn-primary " runat="server" Text="Obtener Metadata" OnClick="btn_get_metadata_bm_Click" />
             </div>
 
-       </div>
+        </div>
         <br />
         <div class="panel-body form-vertical ">
             <span>Progreso</span>
@@ -110,8 +67,8 @@
                     id="bar_get_metadata_bm" runat="server">
                 </div>
             </div>
-          
-        
+
+
             <br />
             <span>Bitacora:</span>
             <div>
@@ -119,9 +76,8 @@
             </div>
         </div>
 
-    <%--<div class="panel-footer">
+        <%--<div class="panel-footer">
     </div>--%>
-
     </asp:Panel>
 
 
