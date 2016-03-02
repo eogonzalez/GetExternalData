@@ -31,6 +31,24 @@ namespace GetExternalData.BM {
         protected global::System.Web.UI.WebControls.Label lbl_cantidad_metadata;
         
         /// <summary>
+        /// Control lbl_Todos_Paises.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbl_Todos_Paises;
+        
+        /// <summary>
+        /// Control cb_paises.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cb_paises;
+        
+        /// <summary>
         /// Control Label4.
         /// </summary>
         /// <remarks>

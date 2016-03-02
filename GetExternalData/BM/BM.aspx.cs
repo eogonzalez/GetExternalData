@@ -75,6 +75,9 @@ namespace GetExternalData.BM
             
 
             string url = null;
+            //Verifica si archivo ya ha sido descargado hoy
+            string filename = null;
+
             //http://api.worldbank.org/countries/indicators/SP.POP.TOTl?date=2008:2009
             //http://api.worldbank.org/countries/indicators/SP.POP.TOTl?MRV=5
 
@@ -82,45 +85,51 @@ namespace GetExternalData.BM
             {
                 if (anio_inicial > 0 && anio_final > 0)
                 {
-                    if (!string.IsNullOrEmpty(pais))
-                    {
+                    if (!cb_paises.Checked)
+                    {//Si no esta chequeado el pais
+                        filename = "C:/Getdata/BM/getMetaData_" + str_indicador + "_" + ddl_pais.SelectedValue + "_" + Convert.ToString(DateTime.Today.Year) + "_" + Convert.ToString(DateTime.Today.Month) + ".xml";
                         url = @"http://api.worldbank.org/countries/"+pais+"/indicators/" + str_indicador + "?date=" + anio_inicial + ":" + anio_final;
                     }
                     else
                     {
-                        url = @"http://api.worldbank.org/countries/indicators/"+str_indicador+"?date="+anio_inicial+":"+anio_final;
+                        
+                        filename = "C:/Getdata/BM/getMetaData_" + str_indicador + "_" + Convert.ToString(DateTime.Today.Year) + "_" + Convert.ToString(DateTime.Today.Month) + ".xml";
+                        //url = @"http://api.worldbank.org/countries/indicators/"+str_indicador+"?date="+anio_inicial+":"+anio_final;
+                        url = @"http://api.worldbank.org/countries/all/indicators/" + str_indicador + "?date=" + anio_inicial + ":" + anio_final;
                     }
                 }
                 else if (años > 0)
                 {
-                    if (!string.IsNullOrEmpty(pais))
+                    if (!cb_paises.Checked)
                     {
+                        filename = "C:/Getdata/BM/getMetaData_" + str_indicador + "_" + ddl_pais.SelectedValue + "_" + Convert.ToString(DateTime.Today.Year) + "_" + Convert.ToString(DateTime.Today.Month) + ".xml";
                         url = @"http://api.worldbank.org/countries/"+pais+"/indicators/" + str_indicador + "?MRV=" + años;
                     }
                     else
                     {
-                        url = @"http://api.worldbank.org/countries/indicators/" + str_indicador + "?MRV=" + años;
+                        filename = "C:/Getdata/BM/getMetaData_" + str_indicador + "_" + Convert.ToString(DateTime.Today.Year) + "_" + Convert.ToString(DateTime.Today.Month) + ".xml";
+                        //url = @"http://api.worldbank.org/countries/indicators/" + str_indicador + "?MRV=" + años;
+                        url = @"http://api.worldbank.org/countries/all/indicators/" + str_indicador + "?MRV=" + años;
                     }
                 }
                 else
                 {
-                    contenido = contenido + "\n" + DateTime.Today.ToString() + " - ERROR - El campo de años y rango de años no deben quedar vacios.";
+                    contenido = contenido + "\n" + DateTime.Now.ToString() + " - ERROR - El campo de años y rango de años no deben quedar vacios.";
                     txt_log_metadata.Text = contenido;
                     return;
                 }
             }
             else
             {
-                contenido = contenido + "\n" + DateTime.Today.ToString() + " - ERROR - Campo indicador no puede quedar vacio.";
+                contenido = contenido + "\n" + DateTime.Now.ToString() + " - ERROR - Campo indicador no puede quedar vacio.";
                 txt_log_metadata.Text = contenido;
                 return;
             }
 
 
-            //Verifica si archivo ya ha sido descargado hoy
-            string filename = "C:/Getdata/BM/getMetaData_"+str_indicador+"_" + Convert.ToString(DateTime.Today.Year) + "_" + Convert.ToString(DateTime.Today.Month) + "_" + Convert.ToString(DateTime.Today.Day) + ".xml";
             
-            contenido = contenido + "\n" + DateTime.Today.ToString() + " - Verificando si el archivo " + filename + " ya ha sido cargado.";
+            
+            contenido = contenido + "\n" + DateTime.Now.ToString() + " - Verificando si el archivo " + filename + " ya ha sido cargado.";
 
             txt_log_metadata.Text = contenido;
 
@@ -129,12 +138,12 @@ namespace GetExternalData.BM
             if (objGeneral.ExisteArchivo(filename))
             {
                 //Si archivo existe
-                contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo ya existe.";
+                contenido = contenido + "\n" + DateTime.Now.ToString() + " - El archivo ya existe.";
                 txt_log_metadata.Text = contenido;
 
                 metadata_list = objGeneral.ReadArchivo(filename);
 
-                contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo ha sido cargado.";
+                contenido = contenido + "\n" + DateTime.Now.ToString() + " - El archivo ha sido cargado.";
                 txt_log_metadata.Text = contenido;
 
             }
@@ -148,12 +157,12 @@ namespace GetExternalData.BM
                 //Si archivo no existe
                 SetTheProgress(bar_get_metadata_bm, "15%");
 
-                contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo no existe.";
+                contenido = contenido + "\n" + DateTime.Now.ToString() + " - El archivo no existe.";
                 txt_log_metadata.Text = contenido;
 
                 objGeneral.SaveArchivo(xmlDoc, filename);
 
-                contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo se ha almacenado.";
+                contenido = contenido + "\n" + DateTime.Now.ToString() + " - El archivo se ha almacenado.";
                 txt_log_metadata.Text = contenido;
 
                 SetTheProgress(bar_get_metadata_bm, "25%");
@@ -166,13 +175,13 @@ namespace GetExternalData.BM
                 url = url+"&per_page=" + total_registros;
                 //filename = "C:/Getdata/BM/getPaises_full_" + Convert.ToString(DateTime.Today.Year) + "_" + Convert.ToString(DateTime.Today.Month) + "_" + Convert.ToString(DateTime.Today.Day) + ".xml";
 
-                //xmlDoc = objGeneral.ObtieneArchivo(url);
-                xmlDoc = objBM.ObtenerArchivoGzip(url);
+                xmlDoc = objGeneral.ObtieneArchivo(url);
+                //xmlDoc = objBM.ObtenerArchivoGzip(url);
 
                 objGeneral.SaveArchivo(xmlDoc, filename);
                 metadata_list = objGeneral.ReadArchivo(filename);
 
-                contenido = contenido + "\n" + DateTime.Today.ToString() + " - El archivo ha sido cargado.";
+                contenido = contenido + "\n" + DateTime.Now.ToString() + " - El archivo ha sido cargado.";
                 txt_log_metadata.Text = contenido;
             }
 
@@ -180,7 +189,7 @@ namespace GetExternalData.BM
 
             objBM.SaveMetaData(metadata_list);
 
-            contenido = contenido + "\n" + DateTime.Today.ToString() + " - La estructura del archivo ha sido almacenado en la Base de Datos.";
+            contenido = contenido + "\n" + DateTime.Now.ToString() + " - La estructura del archivo ha sido almacenado en la Base de Datos.";
             txt_log_metadata.Text = contenido;
 
             //objCepal.GetThematicTree();
@@ -226,6 +235,18 @@ namespace GetExternalData.BM
         protected void ddl_tema_SelectedIndexChanged(object sender, EventArgs e)
         {
             LlenarComboIndicadores(Convert.ToInt32(ddl_tema.SelectedValue.ToString()));
+        }
+
+        protected void cb_paises_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cb_paises.Checked)
+            {
+                ddl_pais.Enabled = false;
+            }
+            else
+            {
+                ddl_pais.Enabled = true;
+            }
         }
     }
 }

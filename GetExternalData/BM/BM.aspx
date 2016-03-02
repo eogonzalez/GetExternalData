@@ -15,8 +15,13 @@
         <div class="panel-body form-horizontal">
 
             <div class="form-group">
+                <asp:Label ID="lbl_Todos_Paises" cssclass="control-label col-xs-2" runat="server" Text="Todos los Paises"></asp:Label>
+                <div class="col-xs-2">
+                    <asp:CheckBox id="cb_paises"  runat="server" AutoPostBack="True" OnCheckedChanged="cb_paises_CheckedChanged"/>
+                </div>
+
                 <asp:Label ID="Label4" CssClass="control-label col-xs-2" runat="server" Text="Seleccione Pais:"></asp:Label>
-                <div class="col-xs-4">
+                <div class="col-xs-6">
                     <asp:DropDownList ID="ddl_pais" type="text" CssClass="form-control" runat="server"></asp:DropDownList>
                 </div>
             </div>

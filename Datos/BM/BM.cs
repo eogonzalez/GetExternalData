@@ -889,8 +889,57 @@ namespace Datos.BM
             return estado;
         }
 
-        //Funcion que almacena metadata de indicador
-        public bool SaveMetaData(DataSet metadata_list)
+        bool ExisteMetaData(string id_indicator, string date, string country_id)
+        {
+            bool estado = true;
+            string sql_query = null;
+            try
+            {
+                sql_query = " SELECT "+
+                    " COALESCE(count(1), 0) "+
+                    " FROM "+
+                    " D_MetaDataBM "+
+                    " WHERE "+
+                    " id_indicator = @id_indicator "+
+                    " and date = @date "+
+                    " and country_id = @country_id ";
+
+                using (var conexion = objConectar.Conectar("bm"))
+                {
+                    var command = new SqlCommand(sql_query, conexion);
+                    command.Parameters.AddWithValue("id_indicator", id_indicator);
+                    command.Parameters.AddWithValue("date", date);
+                    command.Parameters.AddWithValue("country_id", country_id);
+
+                    conexion.Open();
+                    int result = int.Parse(command.ExecuteScalar().ToString());
+
+                    if (result > 0)
+                    {
+                        estado = true;
+                    }
+                    else
+                    {
+                        estado = false;
+                    }
+                }
+
+            }
+            catch(SqlException)
+            {
+
+                throw;
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
+            return estado;
+        }
+
+        //Funcion que almanena datos en tabla consolidada
+        bool SaveMetaDataFinal(DataSet metadata_list)
         {
             bool estado = true;
             string sql_query = null;
@@ -902,86 +951,133 @@ namespace Datos.BM
 
                 foreach (DataRow row_data in dt_data.Rows)
                 {
-                    //Query para insertar en la tabla data
-                    sql_query = " INSERT INTO D_data " +
-                        " (data_id, date, value, decimal, page, pages, per_page)" +
-                        " VALUES " +
-                        " (@data_id, @date, @value, @decimal, @page, @pages, @per_page) ";
-
-                    using (var conexion = objConectar.Conectar("bm"))
+                    foreach (DataRow row_indicator in dt_indicator.Rows)
                     {
-                        var command = new SqlCommand(sql_query, conexion);
-                        command.Parameters.AddWithValue("data_id", row_data["data_id"]);
-                        command.Parameters.AddWithValue("date", row_data["date"]);
-                        command.Parameters.AddWithValue("value", row_data["value"]);
-                        command.Parameters.AddWithValue("decimal", row_data["decimal"]);
-                        command.Parameters.AddWithValue("page", row_data["page"]);
-                        command.Parameters.AddWithValue("pages", row_data["pages"]);
-                        command.Parameters.AddWithValue("per_page", row_data["per_page"]);
-                        conexion.Open();
-                        if (command.ExecuteNonQuery() > 0)
-                        {
-                            estado = true;
-                        }
-                        else
-                        {
-                            estado = false;
-                        }
-                    }
-                }
+                        string data_id = row_data["data_id"].ToString();
+                        string indicator_data_id = row_indicator["data_id"].ToString();
 
-                foreach (DataRow row_indicator in dt_indicator.Rows)
+                        if (data_id == indicator_data_id)
+                        {
+                            foreach (DataRow row_country in dt_country.Rows)
+                            {
+                                string country_data_id = row_country["data_id"].ToString();
+
+                                if (indicator_data_id == country_data_id)
+                                {
+
+                                    //Verifica si existe regitro
+                                    if (!ExisteMetaData(row_indicator["id"].ToString(), row_data["date"].ToString(), row_country["id"].ToString()))
+                                    {//Si no existe metadata
+                                        
+                                        sql_query = " INSERT INTO D_MetaDataBM "+
+                                            " ([id_indicator] ,[indicator_text] "+
+                                            " ,[date], [country_id] "+
+                                            " ,[country_text],[value] ,[decimal]) "+
+                                            " VALUES "+
+                                            " (@id_indicator, @indicator_text "+
+                                            " ,@date, @country_id "+
+                                            " ,@country_text, @value "+
+                                            " ,@decimal) ";
+
+                                        using (var conexion = objConectar.Conectar("bm"))
+                                        {
+                                            var command = new SqlCommand(sql_query, conexion);
+                                            command.Parameters.AddWithValue("id_indicator", row_indicator["id"]);
+                                            command.Parameters.AddWithValue("indicator_text", row_indicator["indicator_text"]);
+                                            command.Parameters.AddWithValue("date", row_data["date"]);
+                                            command.Parameters.AddWithValue("country_id", row_country["id"]);
+                                            command.Parameters.AddWithValue("country_text", row_country["country_text"]);
+                                            command.Parameters.AddWithValue("value", row_data["value"]);
+                                            command.Parameters.AddWithValue("decimal", row_data["decimal"]);
+                                            
+                                            conexion.Open();
+                                            if (command.ExecuteNonQuery() > 0)
+                                            {
+                                                estado = true;
+                                            }
+                                            else
+                                            {
+                                                estado = false;
+                                            }
+                                            conexion.Close();
+                                        }
+
+                                    }
+
+                                    break;
+                                }
+                            }//foreach row_country                 
+
+                            break;
+                        }    
+
+                        
+                    }//foreach row_indicator
+                }//foreach row_data
+
+            }
+            catch (SqlException)
+            {
+
+                throw;
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
+
+            return estado;
+        }
+
+        //Funcion que almacena metadata de indicador
+        public bool SaveMetaData(DataSet metadata_list)
+        {
+            bool estado = true;
+            string sql_query = null;
+            try
+            {
+                DataTable dt_data = metadata_list.Tables["data"];
+
+
+                foreach (DataRow row_data in dt_data.Rows)
                 {
-                    //Query para insertar en la tabla indicator
-                    sql_query = " INSERT INTO D_indicator " +
-                        " (id, indicator_Text, data_Id)" +
-                        " VALUES " +
-                        " (@id, @indicator_Text, @data_Id) ";
 
-                    using (var conexion = objConectar.Conectar("bm"))
+                    if (row_data["data_id"].ToString() == "0")
                     {
-                        var command = new SqlCommand(sql_query, conexion);
-                        command.Parameters.AddWithValue("id", row_indicator["id"]);
-                        command.Parameters.AddWithValue("indicator_Text", row_indicator["indicator_Text"]);
-                        command.Parameters.AddWithValue("data_Id", row_indicator["data_id"]);
-                        conexion.Open();
+                        //Query para insertar en la tabla data
+                        sql_query = " INSERT INTO D_data " +
+                            " (data_id, date, value, decimal, page, pages, per_page)" +
+                            " VALUES " +
+                            " (@data_id, @date, @value, @decimal, @page, @pages, @per_page) ";
 
-                        if (command.ExecuteNonQuery() > 0)
+                        using (var conexion = objConectar.Conectar("bm"))
                         {
-                            estado = true;
+                            var command = new SqlCommand(sql_query, conexion);
+                            command.Parameters.AddWithValue("data_id", row_data["data_id"]);
+                            command.Parameters.AddWithValue("date", row_data["date"]);
+                            command.Parameters.AddWithValue("value", row_data["value"]);
+                            command.Parameters.AddWithValue("decimal", row_data["decimal"]);
+                            command.Parameters.AddWithValue("page", row_data["page"]);
+                            command.Parameters.AddWithValue("pages", row_data["pages"]);
+                            command.Parameters.AddWithValue("per_page", row_data["per_page"]);
+                            conexion.Open();
+                            if (command.ExecuteNonQuery() > 0)
+                            {
+                                estado = true;
+                            }
+                            else
+                            {
+                                estado = false;
+                            }
                         }
-                        else
-                        {
-                            estado = false;
-                        }
+
+                        break;
                     }
                 }
 
-                foreach (DataRow row_country in dt_country.Rows)
-                {
-                    //Query para insertar en la tabla country
-                    sql_query = " INSERT INTO D_country " +
-                        " (id, country_Text, data_Id)" +
-                        " VALUES " +
-                        " (@id, @country_Text, @data_Id) ";
+                estado = SaveMetaDataFinal(metadata_list);
 
-                    using (var conexion = objConectar.Conectar("bm"))
-                    {
-                        var command = new SqlCommand(sql_query, conexion);
-                        command.Parameters.AddWithValue("id", row_country["id"]);
-                        command.Parameters.AddWithValue("country_Text", row_country["country_Text"]);
-                        command.Parameters.AddWithValue("data_id", row_country["data_id"]);
-                        conexion.Open();
-                        if (command.ExecuteNonQuery() > 0)
-                        {
-                            estado = true;
-                        }
-                        else
-                        {
-                            estado = false;
-                        }
-                    }
-                }
             }
             catch (Exception)
             {
@@ -1186,8 +1282,8 @@ namespace Datos.BM
 
             try
             {
-                sql_query = " select "+
-                    " ii.indicator_id as id, ii.name as name "+
+                sql_query = "  select "+
+                    " ii.id as id, ii.name + ' - '+algo.name as name "+
                     " FROM "+
                     " I_topic it "+
                     " left join  "+
@@ -1195,10 +1291,29 @@ namespace Datos.BM
                     " its.topics_id = it.topics_id "+
                     " left join  "+
                     " I_indicator ii ON "+
-                    " its.indicator_id = ii.indicator_id "+
+                    " its.indicator_id = ii.indicator_id, "+
+                    " (select "+
+                    "   it.id as id, ii.indicator_id, ii.name as name "+
+                    "   FROM "+
+                    "   I_topic it "+
+                    "   left join  "+
+                    "   I_topics its on "+
+                    "   its.topics_id = it.topics_id "+
+                    "   left join  "+
+                    "   I_indicator ii ON "+
+                    "   its.indicator_id = ii.indicator_id "+
+                    "   where "+
+                    "   it.idioma = 'es' "+
+                    "   and ii.idioma = it.idioma "+
+                    "   group by it.id, ii.indicator_id, ii.name) as algo "+
                     " where "+
-                    " it.id = @id_tema ";
-
+                    " it.id = @id_tema "+
+                    " and algo.id = it.id "+
+                    " and it.idioma = 'en' "+
+                    " and ii.idioma = it.idioma "+
+                    " and ii.indicator_id = algo.indicator_id "+
+                    " group by ii.id, ii.name, algo.name ";
+ 
                 using (var con = objConectar.Conectar("bm"))
                 {
                     var command = new SqlCommand(sql_query, con);
