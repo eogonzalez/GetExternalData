@@ -650,7 +650,7 @@ namespace Datos.COMTRADE
                     command.Parameters.AddWithValue("anio_carga", anio_carga);
                     command.Parameters.AddWithValue("codigo_sistem_harmony", codigo_sh);
                     command.Parameters.AddWithValue("codigo_inciso", codigo_inciso);
-                    command.Parameters.AddWithValue("hora_inicio", DateTime.Now.ToString("h:mm:ss"));
+                    command.Parameters.AddWithValue("hora_inicio", DateTime.Now.ToString("HH:mm:ss"));
                     command.Parameters.AddWithValue("estado", "P");
                     conexion.Open();
 
@@ -704,7 +704,7 @@ namespace Datos.COMTRADE
                 {
                     var command = new SqlCommand(sql_query, conexion);
 
-                    command.Parameters.AddWithValue("hora_fin", hora_fin.ToString("h:mm:ss"));
+                    command.Parameters.AddWithValue("hora_fin", hora_fin.ToString("HH:mm:ss"));
                     command.Parameters.AddWithValue("codigo_pais", codigo_pais);
                     command.Parameters.AddWithValue("anio_carga", anio_carga);
                     command.Parameters.AddWithValue("codigo_sh", codigo_sh);

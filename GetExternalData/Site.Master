@@ -4,7 +4,7 @@
 
 <html lang="es">
 <head runat="server">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%: Page.Title %> - Get External Data - SICOGUATE - </title>
@@ -12,7 +12,7 @@
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/bundles/modernizr") %>
     </asp:PlaceHolder>
-    <webopt:bundlereference runat="server" path="~/Content/css" />
+    <webopt:BundleReference runat="server" Path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 
 </head>
@@ -35,7 +35,7 @@
                 <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
                 <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
                 <asp:ScriptReference Name="WebFormsBundle" />
-                
+
                 <%--Site Scripts--%>
             </Scripts>
         </asp:ScriptManager>
@@ -51,48 +51,29 @@
                     <a class="navbar-brand" runat="server" href="~/">Get External Data</a>
                 </div>
                 <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li><a runat="server" href="~/">Inicio</a></li>
-                        <%--<li><a runat="server" href="~/About">Acerca de</a></li>--%>
-                        <%--<li><a runat="server" href="~/Contact">Contacto</a></li>--%>
-                        <li><a href="/CEPALStat/CEPALStat.aspx">CEPALStat</a></li>
-                        <li class="dropdown">
-                            <a class="dropdown-toogle" data-toggle="dropdown" href="#"> Banco Mundial 
-                                <span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="/BM/IndicatorsBM.aspx">Descarga de Indicadores</a></li>
-                                <li><a href="/BM/PaisesBM.aspx">Descarga Paises</a></li>
-                                <li><a href="/BM/BM.aspx">Descarga de Datos de Indicadores</a></li>
-                            </ul>
-                        </li>
-                        <%--<li><a href="/BM/BM.aspx">Banco Mundial</a></li>--%>
-                        <li class="dropdown">
-                            <a class="dropdown-toogle" data-toggle="dropdown" href="#">UN COMTRADE
-                            <span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="/COMTRADE/CommoditiesUN.aspx">Descarga Sistema Armonizado</a></li>
-                                <li><a href="/COMTRADE/PaisesUN.aspx">Descarga Paises</a></li>
-                                <li><a href="/COMTRADE/UN.aspx">Descarga de Datos</a></li>
-                                <li><a href="/COMTRADE/BitacoraUN.aspx">Bitacora descargas</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                    <asp:LoginView runat="server" ViewStateMode="Disabled">
-                        <AnonymousTemplate>
-                            <ul class="nav navbar-nav navbar-right">
-                                <li><a runat="server" href="~/Account/Register">Registrarse</a></li>
-                                <li><a runat="server" href="~/Account/Login">Iniciar sesión</a></li>
-                            </ul>
-                        </AnonymousTemplate>
-                        <LoggedInTemplate>
-                            <ul class="nav navbar-nav navbar-right">
-                                <li><a runat="server" href="~/Account/Manage" title="Manage your account">Hello, <%: Context.User.Identity.GetUserName()  %> !</a></li>
-                                <li>
-                                    <asp:LoginStatus runat="server" LogoutAction="Redirect" LogoutText="Cerrar sesión" LogoutPageUrl="~/" OnLoggingOut="Unnamed_LoggingOut" />
-                                </li>
-                            </ul>
-                        </LoggedInTemplate>
-                    </asp:LoginView>
+
+                    <asp:Menu runat="server" ID="menuDinamico"
+                        Orientation="Horizontal" RenderingMode="List"
+                        IncludeStyleBlock="false"
+                        StaticMenuStyle-CssClass="nav navbar-nav"
+                        StaticMenuItemStyle-CssClass="StaticMenuItem"
+                        DynamicMenuStyle-CssClass="dropdown-menu">
+                        <Items>
+                            <asp:MenuItem NavigateUrl="~/" Text="Inicio" />
+                            <asp:MenuItem NavigateUrl="~/" Text="Banco Mundial">
+                                <asp:MenuItem NavigateUrl="~/BM/IndicatorsBM" Text="Descarga de Indicadores" />
+                                <asp:MenuItem NavigateUrl="~/BM/PaisesBM" Text="Descarga Paises" />
+                                <asp:MenuItem NavigateUrl="~/BM/BM" Text="Descarga de Datos de Indicadores" />
+                            </asp:MenuItem>
+                            <asp:MenuItem NavigateUrl="~/" Text="UN COMTRADE">
+                                <asp:MenuItem NavigateUrl="~/COMTRADE/CommoditiesUN" Text="Descarga Sistema Armonizado" />
+                                <asp:MenuItem NavigateUrl="~/COMTRADE/PaisesUN" Text="Descarga Paises" />
+                                <asp:MenuItem NavigateUrl="~/COMTRADE/UN" Text="Descarga de Datos" />
+                                <asp:MenuItem NavigateUrl="~/COMTRADE/BitacoraUN" Text="Bitacora descargas" />
+                            </asp:MenuItem>
+
+                        </Items>
+                    </asp:Menu>
                 </div>
             </div>
         </div>
@@ -105,7 +86,7 @@
             </footer>
         </div>
     </form>
-<%--        <script type="text/javascript">
+    <%--        <script type="text/javascript">
             //$(document).on("load", inicio);
 
 
